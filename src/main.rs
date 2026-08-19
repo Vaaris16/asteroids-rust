@@ -1,8 +1,9 @@
 use bevy::prelude::*;
 
-use crate::background::background_plugin::BackgroundPlugin;
+use crate::{background::background_plugin::BackgroundPlugin, player::player_plugin::PlayerPlugin};
 
 mod background;
+mod player;
 
 pub const BACKGROUND_COLOR: Color = Color::BLACK;
 
@@ -17,6 +18,7 @@ fn main() {
                 ..Default::default()
             }),
             BackgroundPlugin,
+            PlayerPlugin,
         ))
         .run();
 }
