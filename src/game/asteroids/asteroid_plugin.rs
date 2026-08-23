@@ -1,3 +1,5 @@
+use std::array::from_fn;
+
 use bevy::{prelude::*, window::PrimaryWindow};
 use rand::RngExt;
 
@@ -7,6 +9,7 @@ impl Plugin for AsteroidPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(Update, maintain_asteroids)
             .add_systems(Update, out_of_bounds_asteroid)
+            .add_systems(Update, rotate_asteroids)
             .add_systems(Update, move_asteroid);
     }
 }
@@ -22,6 +25,7 @@ enum Side {
 struct Asteroid {
     velocity: Vec3,
     side: Side,
+    rotation_factor: f32,
     window_x: f32,
     window_y: f32,
 }
@@ -31,9 +35,13 @@ impl Asteroid {
         Self {
             velocity: Vec3::ZERO,
             side: Self::rand_side(),
+            rotation_factor: Self::rand_rotation_factor(),
             window_x,
             window_y,
         }
+    }
+    fn rand_rotation_factor() -> f32 {
+        rand::rng().random_range(0.01..0.03)
     }
     fn rand_side() -> Side {
         let mut rng = rand::rng();
@@ -142,7 +150,7 @@ fn maintain_asteroids(
     assets_server: Res<AssetServer>,
 ) {
     let asteroid_count = asteroids.iter().count();
-    if asteroid_count <= 4 {
+    if asteroid_count <= 3 {
         spawn_asteroid(window_s, commands, assets_server);
     }
 }
@@ -160,5 +168,11 @@ fn out_of_bounds_asteroid(
         {
             commands.entity(asteroid_entity).despawn();
         }
+    }
+}
+
+fn rotate_asteroids(asteroids: Query<(&mut Transform, &Asteroid), With<Asteroid>>) {
+    for (mut asteroid_trans, asteroid) in asteroids {
+        asteroid_trans.rotate_z(asteroid.rotation_factor);
     }
 }
