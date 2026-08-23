@@ -30,9 +30,19 @@ impl Asteroid {
     fn new(window_x: f32, window_y: f32) -> Self {
         Self {
             velocity: Vec3::ZERO,
-            side: Side::Top,
+            side: Self::rand_side(),
             window_x,
             window_y,
+        }
+    }
+    fn rand_side() -> Side {
+        let mut rng = rand::rng();
+        match rng.random_range(0..4) {
+            0 => Side::Top,
+            1 => Side::Bottom,
+            2 => Side::Right,
+            3 => Side::Left,
+            _ => unreachable!(),
         }
     }
     fn rand_pos_vel(&self) -> (Vec3, Vec3) {
@@ -53,7 +63,48 @@ impl Asteroid {
 
                 (pos, vel)
             }
-            _ => (Vec3::splat(0.), Vec3::splat(0.)),
+
+            Side::Bottom => {
+                let mut rng = rand::rng();
+                let pos = Vec3::new(
+                    rng.random_range(-self.window_x / 2.0..self.window_x / 2.0),
+                    -self.window_y / 2.,
+                    0.,
+                );
+
+                let vel = Vec3::new(rng.random_range(-3.0..3.0), rng.random_range(3.0..6.0), 0.);
+
+                (pos, vel)
+            }
+            Side::Right => {
+                let mut rng = rand::rng();
+                let pos = Vec3::new(
+                    self.window_x / 2.,
+                    rng.random_range(-self.window_y / 2.0..self.window_y / 2.0),
+                    0.,
+                );
+
+                let vel = Vec3::new(
+                    rng.random_range(-6.0..-3.0),
+                    rng.random_range(-3.0..3.0),
+                    0.,
+                );
+
+                (pos, vel)
+            }
+
+            Side::Left => {
+                let mut rng = rand::rng();
+                let pos = Vec3::new(
+                    -self.window_x / 2.,
+                    rng.random_range(-self.window_y / 2.0..self.window_y / 2.0),
+                    0.,
+                );
+
+                let vel = Vec3::new(rng.random_range(3.0..6.0), rng.random_range(-6.0..3.0), 0.);
+
+                (pos, vel)
+            }
         }
     }
 }
