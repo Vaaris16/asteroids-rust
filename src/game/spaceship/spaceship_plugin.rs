@@ -31,7 +31,7 @@ fn spawn_space_ship(mut commands: Commands, assets_server: Res<AssetServer>) {
     commands.spawn((
         Sprite {
             image: assets_server.load(SPACE_SHIP_IMAGE_PATH),
-            custom_size: Some(SPACE_SHIP_SIZE),
+            //custom_size: Some(SPACE_SHIP_SIZE),
             ..Default::default()
         },
         SpaceShip,
@@ -67,7 +67,7 @@ fn spawn_bullet(
     commands.spawn((
         Sprite {
             image: assets_server.load(BULLET_IMAGE_PATH),
-            custom_size: Some(BULLET_SIZE),
+            //custom_size: Some(BULLET_SIZE),
             ..Default::default()
         },
         Bullet {

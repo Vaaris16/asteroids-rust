@@ -63,11 +63,7 @@ impl Asteroid {
                     0.,
                 );
 
-                let vel = Vec3::new(
-                    rng.random_range(-3.0..3.0),
-                    rng.random_range(-6.0..-3.0),
-                    0.,
-                );
+                let vel = Vec3::new(rng.random_range(-3.0..3.0), rng.random_range(-3.0..0.0), 0.);
 
                 (pos, vel)
             }

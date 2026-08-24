@@ -8,6 +8,6 @@ pub struct GamePlugin;
 
 impl Plugin for GamePlugin {
     fn build(&self, app: &mut App) {
-        app.add_plugins((AsteroidPlugin));
+        app.add_plugins((AsteroidPlugin, SpaceShipPlugin));
     }
 }
