@@ -1,5 +1,7 @@
 use bevy::prelude::*;
 
+use crate::game::asteroids::asteroid_plugin::Asteroid;
+
 pub struct SpaceShipPlugin;
 
 impl Plugin for SpaceShipPlugin {
@@ -12,11 +14,9 @@ impl Plugin for SpaceShipPlugin {
 
 const SPACE_SHIP_IMAGE_PATH: &str = "space_ship.png";
 const SPACE_SHIP_ROTATION: f32 = 0.1;
-const SPACE_SHIP_SIZE: Vec2 = Vec2::new(75., 100.);
 
 const BULLET_IMAGE_PATH: &str = "bullet.png";
 const BULLET_OFFSET: Vec3 = Vec3::new(0., 75., 0.);
-const BULLET_SIZE: Vec2 = Vec2::new(15., 45.);
 const BULLET_SPEED: f32 = 5.;
 
 #[derive(Component)]
@@ -31,7 +31,6 @@ fn spawn_space_ship(mut commands: Commands, assets_server: Res<AssetServer>) {
     commands.spawn((
         Sprite {
             image: assets_server.load(SPACE_SHIP_IMAGE_PATH),
-            //custom_size: Some(SPACE_SHIP_SIZE),
             ..Default::default()
         },
         SpaceShip,
@@ -67,7 +66,6 @@ fn spawn_bullet(
     commands.spawn((
         Sprite {
             image: assets_server.load(BULLET_IMAGE_PATH),
-            //custom_size: Some(BULLET_SIZE),
             ..Default::default()
         },
         Bullet {

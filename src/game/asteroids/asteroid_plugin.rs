@@ -1,5 +1,3 @@
-use std::array::from_fn;
-
 use bevy::{prelude::*, window::PrimaryWindow};
 use rand::RngExt;
 
@@ -21,13 +19,39 @@ enum Side {
     Left,
 }
 
+enum AsteroidType {
+    AsteroidSmall,
+    AsteroidMedium,
+    AsteroidLarge,
+}
+
+impl AsteroidType {
+    fn path(&self) -> &'static str {
+        match self {
+            AsteroidType::AsteroidSmall => "asteroids_images/asteroid_1.png",
+            AsteroidType::AsteroidMedium => "asteroids_images/asteroid_2.png",
+            AsteroidType::AsteroidLarge => "asteroids_images/asteroid_3.png",
+        }
+    }
+
+    fn rand_asteroid_type() -> AsteroidType {
+        match rand::rng().random_range(0..3) {
+            0 => AsteroidType::AsteroidSmall,
+            1 => AsteroidType::AsteroidMedium,
+            2 => AsteroidType::AsteroidLarge,
+            _ => unreachable!(),
+        }
+    }
+}
+
 #[derive(Component)]
-struct Asteroid {
+pub struct Asteroid {
     velocity: Vec3,
     side: Side,
     rotation_factor: f32,
     window_x: f32,
     window_y: f32,
+    asteroid_path: AsteroidType,
 }
 
 impl Asteroid {
@@ -38,6 +62,7 @@ impl Asteroid {
             rotation_factor: Self::rand_rotation_factor(),
             window_x,
             window_y,
+            asteroid_path: AsteroidType::rand_asteroid_type(),
         }
     }
     fn rand_rotation_factor() -> f32 {
@@ -124,8 +149,7 @@ fn spawn_asteroid(
 
     commands.spawn((
         Sprite {
-            image: assets_server.load("asteroids_images/asteroid_1.png"),
-            custom_size: Some(Vec2::splat(200.)),
+            image: assets_server.load(asteroid.asteroid_path.path()),
             ..Default::default()
         },
         asteroid,
