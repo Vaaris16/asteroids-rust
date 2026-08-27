@@ -1,14 +1,12 @@
+use avian2d::prelude::*;
 use bevy::prelude::*;
-
-use crate::game::asteroids::asteroid_plugin::Asteroid;
 
 pub struct SpaceShipPlugin;
 
 impl Plugin for SpaceShipPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(Startup, spawn_space_ship)
-            .add_systems(Update, space_ship_controls)
-            .add_systems(Update, move_bullets);
+            .add_systems(Update, space_ship_controls);
     }
 }
 
@@ -17,13 +15,13 @@ const SPACE_SHIP_ROTATION: f32 = 0.1;
 
 const BULLET_IMAGE_PATH: &str = "bullet.png";
 const BULLET_OFFSET: Vec3 = Vec3::new(0., 75., 0.);
-const BULLET_SPEED: f32 = 5.;
+const BULLET_SPEED: f32 = 600.;
 
 #[derive(Component)]
 struct SpaceShip;
 
 #[derive(Component)]
-struct Bullet {
+pub struct Bullet {
     velocity: Vec3,
 }
 
@@ -71,6 +69,10 @@ fn spawn_bullet(
         Bullet {
             velocity: (space_ship.rotation * Vec3::Y) * BULLET_SPEED,
         },
+        Collider::rectangle(15., 45.),
+        CollisionEventsEnabled,
+        RigidBody::Kinematic,
+        LinearVelocity(((space_ship.rotation * Vec3::Y) * BULLET_SPEED).truncate()),
         Transform {
             translation: tip,
             rotation: space_ship.rotation,

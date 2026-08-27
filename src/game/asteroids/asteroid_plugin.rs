@@ -1,25 +1,31 @@
+use avian2d::prelude::*;
 use bevy::{prelude::*, window::PrimaryWindow};
 use rand::RngExt;
+
+use crate::game::{asteroids::asteroid_component::Asteroid, spaceship::spaceship_plugin::Bullet};
 
 pub struct AsteroidPlugin;
 
 impl Plugin for AsteroidPlugin {
     fn build(&self, app: &mut App) {
+        app.add_plugins(PhysicsPlugins::default())
+            .add_plugins(PhysicsDebugPlugin::default());
         app.add_systems(Update, maintain_asteroids)
             .add_systems(Update, out_of_bounds_asteroid)
             .add_systems(Update, rotate_asteroids)
-            .add_systems(Update, move_asteroid);
+            .add_systems(Update, move_asteroid)
+            .add_systems(Update, check_collision_with_bullet);
     }
 }
 
-enum Side {
+pub enum Side {
     Top,
     Bottom,
     Right,
     Left,
 }
 
-enum AsteroidType {
+pub enum AsteroidType {
     AsteroidSmall,
     AsteroidMedium,
     AsteroidLarge,
@@ -28,112 +34,18 @@ enum AsteroidType {
 impl AsteroidType {
     fn path(&self) -> &'static str {
         match self {
-            AsteroidType::AsteroidSmall => "asteroids_images/asteroid_1.png",
-            AsteroidType::AsteroidMedium => "asteroids_images/asteroid_2.png",
-            AsteroidType::AsteroidLarge => "asteroids_images/asteroid_3.png",
+            AsteroidType::AsteroidSmall => "asteroids_images/asteroid_small.png",
+            AsteroidType::AsteroidMedium => "asteroids_images/asteroid_medium.png",
+            AsteroidType::AsteroidLarge => "asteroids_images/asteroid_large.png",
         }
     }
 
-    fn rand_asteroid_type() -> AsteroidType {
+    pub fn rand_asteroid_type() -> AsteroidType {
         match rand::rng().random_range(0..3) {
             0 => AsteroidType::AsteroidSmall,
             1 => AsteroidType::AsteroidMedium,
             2 => AsteroidType::AsteroidLarge,
             _ => unreachable!(),
-        }
-    }
-}
-
-#[derive(Component)]
-pub struct Asteroid {
-    velocity: Vec3,
-    side: Side,
-    rotation_factor: f32,
-    window_x: f32,
-    window_y: f32,
-    asteroid_path: AsteroidType,
-}
-
-impl Asteroid {
-    fn new(window_x: f32, window_y: f32) -> Self {
-        Self {
-            velocity: Vec3::ZERO,
-            side: Self::rand_side(),
-            rotation_factor: Self::rand_rotation_factor(),
-            window_x,
-            window_y,
-            asteroid_path: AsteroidType::rand_asteroid_type(),
-        }
-    }
-    fn rand_rotation_factor() -> f32 {
-        rand::rng().random_range(0.01..0.03)
-    }
-    fn rand_side() -> Side {
-        let mut rng = rand::rng();
-        match rng.random_range(0..4) {
-            0 => Side::Top,
-            1 => Side::Bottom,
-            2 => Side::Right,
-            3 => Side::Left,
-            _ => unreachable!(),
-        }
-    }
-    fn rand_pos_vel(&self) -> (Vec3, Vec3) {
-        match self.side {
-            Side::Top => {
-                let mut rng = rand::rng();
-                let pos = Vec3::new(
-                    rng.random_range(-self.window_x / 2.0..self.window_x / 2.0),
-                    self.window_y / 2.,
-                    0.,
-                );
-
-                let vel = Vec3::new(rng.random_range(-3.0..3.0), rng.random_range(-3.0..0.0), 0.);
-
-                (pos, vel)
-            }
-
-            Side::Bottom => {
-                let mut rng = rand::rng();
-                let pos = Vec3::new(
-                    rng.random_range(-self.window_x / 2.0..self.window_x / 2.0),
-                    -self.window_y / 2.,
-                    0.,
-                );
-
-                let vel = Vec3::new(rng.random_range(-3.0..3.0), rng.random_range(3.0..6.0), 0.);
-
-                (pos, vel)
-            }
-            Side::Right => {
-                let mut rng = rand::rng();
-                let pos = Vec3::new(
-                    self.window_x / 2.,
-                    rng.random_range(-self.window_y / 2.0..self.window_y / 2.0),
-                    0.,
-                );
-
-                let vel = Vec3::new(
-                    rng.random_range(-6.0..-3.0),
-                    rng.random_range(-3.0..3.0),
-                    0.,
-                );
-
-                (pos, vel)
-            }
-
-            Side::Left => {
-                let mut rng = rand::rng();
-                let pos = Vec3::new(
-                    -self.window_x / 2.,
-                    rng.random_range(-self.window_y / 2.0..self.window_y / 2.0),
-                    0.,
-                );
-
-                let vel = Vec3::new(rng.random_range(3.0..6.0), rng.random_range(-6.0..3.0), 0.);
-
-                (pos, vel)
-            }
         }
     }
 }
@@ -149,9 +61,11 @@ fn spawn_asteroid(
 
     commands.spawn((
         Sprite {
-            image: assets_server.load(asteroid.asteroid_path.path()),
+            image: assets_server.load(asteroid.asteroid_type.path()),
             ..Default::default()
         },
+        Collider::circle(asteroid.collider_radius),
+        CollisionEventsEnabled,
         asteroid,
         Transform::from_translation(pos),
     ));
@@ -194,5 +108,23 @@ fn out_of_bounds_asteroid(
 fn rotate_asteroids(asteroids: Query<(&mut Transform, &Asteroid), With<Asteroid>>) {
     for (mut asteroid_trans, asteroid) in asteroids {
         asteroid_trans.rotate_z(asteroid.rotation_factor);
+    }
+}
+
+fn check_collision_with_bullet(
+    mut events: MessageReader<CollisionStart>,
+    bullets: Query<(), With<Bullet>>,
+    asteroids: Query<(), With<Asteroid>>,
+    mut commands: Commands,
+) {
+    for event in events.read() {
+        let entity1 = event.collider1;
+        let entity2 = event.collider2;
+
+        if bullets.contains(entity1) && asteroids.contains(entity2) {
+            commands.entity(entity2).despawn();
+        } else if bullets.contains(entity2) && asteroids.contains(entity1) {
+            commands.entity(entity1).despawn();
+        }
     }
 }
