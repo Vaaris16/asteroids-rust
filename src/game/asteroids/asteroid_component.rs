@@ -1,4 +1,4 @@
-use crate::game::asteroids::asteroid_plugin::{AsteroidType, Side};
+use crate::game::asteroids::{asteroid_plugin::Side, asteroid_types::AsteroidType};
 use bevy::prelude::*;
 use rand::RngExt;
 

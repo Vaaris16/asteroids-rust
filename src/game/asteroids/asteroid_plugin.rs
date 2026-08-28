@@ -13,8 +13,7 @@ impl Plugin for AsteroidPlugin {
         app.add_systems(Update, maintain_asteroids)
             .add_systems(Update, out_of_bounds_asteroid)
             .add_systems(Update, rotate_asteroids)
-            .add_systems(Update, move_asteroid)
-            .add_systems(Update, check_collision_with_bullet);
+            .add_systems(Update, move_asteroid);
     }
 }
 
@@ -23,31 +22,6 @@ pub enum Side {
     Bottom,
     Right,
     Left,
-}
-
-pub enum AsteroidType {
-    AsteroidSmall,
-    AsteroidMedium,
-    AsteroidLarge,
-}
-
-impl AsteroidType {
-    fn path(&self) -> &'static str {
-        match self {
-            AsteroidType::AsteroidSmall => "asteroids_images/asteroid_small.png",
-            AsteroidType::AsteroidMedium => "asteroids_images/asteroid_medium.png",
-            AsteroidType::AsteroidLarge => "asteroids_images/asteroid_large.png",
-        }
-    }
-
-    pub fn rand_asteroid_type() -> AsteroidType {
-        match rand::rng().random_range(0..3) {
-            0 => AsteroidType::AsteroidSmall,
-            1 => AsteroidType::AsteroidMedium,
-            2 => AsteroidType::AsteroidLarge,
-            _ => unreachable!(),
-        }
-    }
 }
 
 fn spawn_asteroid(
@@ -108,23 +82,5 @@ fn out_of_bounds_asteroid(
 fn rotate_asteroids(asteroids: Query<(&mut Transform, &Asteroid), With<Asteroid>>) {
     for (mut asteroid_trans, asteroid) in asteroids {
         asteroid_trans.rotate_z(asteroid.rotation_factor);
-    }
-}
-
-fn check_collision_with_bullet(
-    mut events: MessageReader<CollisionStart>,
-    bullets: Query<(), With<Bullet>>,
-    asteroids: Query<(), With<Asteroid>>,
-    mut commands: Commands,
-) {
-    for event in events.read() {
-        let entity1 = event.collider1;
-        let entity2 = event.collider2;
-
-        if bullets.contains(entity1) && asteroids.contains(entity2) {
-            commands.entity(entity2).despawn();
-        } else if bullets.contains(entity2) && asteroids.contains(entity1) {
-            commands.entity(entity1).despawn();
-        }
     }
 }
