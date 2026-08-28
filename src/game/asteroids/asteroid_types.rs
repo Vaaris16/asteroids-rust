@@ -1,5 +1,6 @@
 use rand::RngExt;
 
+// Enum representing the different types of asteroids.
 pub enum AsteroidType {
     AsteroidSmall,
     AsteroidMedium,
@@ -7,6 +8,7 @@ pub enum AsteroidType {
 }
 
 impl AsteroidType {
+    // Returns the image path based on the AsteroidType.
     pub fn path(&self) -> &'static str {
         match self {
             AsteroidType::AsteroidSmall => "asteroids_images/asteroid_small.png",
@@ -15,6 +17,7 @@ impl AsteroidType {
         }
     }
 
+    // Returns a random AsteroidType.
     pub fn rand_asteroid_type() -> AsteroidType {
         match rand::rng().random_range(0..3) {
             0 => AsteroidType::AsteroidSmall,

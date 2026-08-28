@@ -17,6 +17,7 @@ impl Plugin for AsteroidPlugin {
     }
 }
 
+// Enum to define the sides at which the asteroids can spawn.
 pub enum Side {
     Top,
     Bottom,
@@ -24,6 +25,7 @@ pub enum Side {
     Left,
 }
 
+// Spawns an asteroid.
 fn spawn_asteroid(
     window_s: Single<&Window, With<PrimaryWindow>>,
     mut commands: Commands,
@@ -45,12 +47,14 @@ fn spawn_asteroid(
     ));
 }
 
+// Moves the asteroids using their velocity.
 fn move_asteroid(asteroids: Query<(&mut Transform, &Asteroid), With<Asteroid>>) {
     for (mut asteroid_trans, asteroid) in asteroids {
         asteroid_trans.translation += asteroid.velocity;
     }
 }
 
+// Maintains the number of asteroids.
 fn maintain_asteroids(
     asteroids: Query<(), With<Asteroid>>,
     window_s: Single<&Window, With<PrimaryWindow>>,
@@ -63,6 +67,7 @@ fn maintain_asteroids(
     }
 }
 
+// Checks whether asteroids are out of bounds and despawns them.
 fn out_of_bounds_asteroid(
     asteroids: Query<(&mut Transform, Entity), With<Asteroid>>,
     window_s: Single<&Window, With<PrimaryWindow>>,
@@ -79,6 +84,7 @@ fn out_of_bounds_asteroid(
     }
 }
 
+// Rotates asteroids based on their random rotation_factor.
 fn rotate_asteroids(asteroids: Query<(&mut Transform, &Asteroid), With<Asteroid>>) {
     for (mut asteroid_trans, asteroid) in asteroids {
         asteroid_trans.rotate_z(asteroid.rotation_factor);

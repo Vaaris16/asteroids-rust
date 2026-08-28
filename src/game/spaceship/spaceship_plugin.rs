@@ -10,21 +10,25 @@ impl Plugin for SpaceShipPlugin {
     }
 }
 
+// Image path of the space ship.
 const SPACE_SHIP_IMAGE_PATH: &str = "space_ship.png";
+// Defines the amount the space ship rotates per update.
 const SPACE_SHIP_ROTATION: f32 = 0.1;
 
+// Image path of the bullet.
 const BULLET_IMAGE_PATH: &str = "bullet.png";
+// Bullet offset from the space ship.
 const BULLET_OFFSET: Vec3 = Vec3::new(0., 75., 0.);
+// Defines the bullet speed.
 const BULLET_SPEED: f32 = 600.;
 
 #[derive(Component)]
 struct SpaceShip;
 
 #[derive(Component)]
-pub struct Bullet {
-    velocity: Vec3,
-}
+pub struct Bullet;
 
+// Spawns the space ship.
 fn spawn_space_ship(mut commands: Commands, assets_server: Res<AssetServer>) {
     commands.spawn((
         Sprite {
@@ -36,6 +40,7 @@ fn spawn_space_ship(mut commands: Commands, assets_server: Res<AssetServer>) {
     ));
 }
 
+// Defines controls for the space ship.
 fn space_ship_controls(
     mut space_ship: Single<&mut Transform, With<SpaceShip>>,
     key_pressed: Res<ButtonInput<KeyCode>>,
@@ -55,6 +60,7 @@ fn space_ship_controls(
     }
 }
 
+// Spawns a bullet from the tip of the space ship.
 fn spawn_bullet(
     space_ship: &Single<&mut Transform, With<SpaceShip>>,
     commands: &mut Commands,
@@ -66,9 +72,7 @@ fn spawn_bullet(
             image: assets_server.load(BULLET_IMAGE_PATH),
             ..Default::default()
         },
-        Bullet {
-            velocity: (space_ship.rotation * Vec3::Y) * BULLET_SPEED,
-        },
+        Bullet,
         Collider::rectangle(15., 45.),
         CollisionEventsEnabled,
         RigidBody::Kinematic,
@@ -79,10 +83,4 @@ fn spawn_bullet(
             ..Default::default()
         },
     ));
-}
-
-fn move_bullets(bullets: Query<(&mut Transform, &Bullet), With<Bullet>>) {
-    for (mut bullet_trans, bullet) in bullets {
-        bullet_trans.translation += bullet.velocity;
-    }
 }

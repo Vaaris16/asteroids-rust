@@ -2,6 +2,7 @@ use crate::game::asteroids::{asteroid_plugin::Side, asteroid_types::AsteroidType
 use bevy::prelude::*;
 use rand::RngExt;
 
+// Component used to identify asteroids
 #[derive(Component)]
 pub struct Asteroid {
     pub velocity: Vec3,
@@ -14,6 +15,7 @@ pub struct Asteroid {
 }
 
 impl Asteroid {
+    // Used to spawn a new Asteroid Component
     pub fn new(window_x: f32, window_y: f32) -> Self {
         let asteroid_type = AsteroidType::rand_asteroid_type();
         let collider_radius = Self::get_collider_radius(&asteroid_type);
@@ -27,6 +29,7 @@ impl Asteroid {
             collider_radius,
         }
     }
+    // Returns the collider_radius based on the AsteroidType
     fn get_collider_radius(asteroid_type: &AsteroidType) -> f32 {
         match asteroid_type {
             AsteroidType::AsteroidSmall => 50.,
@@ -34,9 +37,11 @@ impl Asteroid {
             AsteroidType::AsteroidLarge => 125.,
         }
     }
+    // Returns a random rotation factor
     fn rand_rotation_factor() -> f32 {
         rand::rng().random_range(0.01..0.03)
     }
+    // Returns a random Side
     fn rand_side() -> Side {
         let mut rng = rand::rng();
         match rng.random_range(0..4) {
@@ -47,6 +52,7 @@ impl Asteroid {
             _ => unreachable!(),
         }
     }
+    // Returns random position and velocity for the asteroid.
     pub fn rand_pos_vel(&self) -> (Vec3, Vec3) {
         match self.side {
             Side::Top => {
