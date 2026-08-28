@@ -12,6 +12,14 @@ mod player;
 
 pub const BACKGROUND_COLOR: Color = Color::BLACK;
 
+#[derive(Default, States, Hash, Eq, Debug, PartialEq, Clone)]
+pub enum GameState {
+    SplashScreen,
+    #[default]
+    Game,
+    Retry,
+}
+
 fn main() {
     App::new()
         .add_plugins((
@@ -26,5 +34,6 @@ fn main() {
             PlayerPlugin,
             GamePlugin,
         ))
+        .init_state::<GameState>()
         .run();
 }

@@ -1,12 +1,14 @@
 use avian2d::prelude::*;
 use bevy::prelude::*;
 
+use crate::{GameState, game::game_plugin::GameSet};
+
 pub struct SpaceShipPlugin;
 
 impl Plugin for SpaceShipPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(Startup, spawn_space_ship)
-            .add_systems(Update, space_ship_controls);
+        app.add_systems(OnEnter(GameState::Game), spawn_space_ship)
+            .add_systems(Update, space_ship_controls.in_set(GameSet));
     }
 }
 

@@ -1,12 +1,14 @@
 use bevy::{core_pipeline::oit::resolve::node, prelude::*};
 
+use crate::{GameState, game::game_plugin::GameSet};
+
 pub struct ScorePlugin;
 
 impl Plugin for ScorePlugin {
     fn build(&self, app: &mut App) {
         app.insert_resource(Score { score: 0 });
-        app.add_systems(Startup, spawn_score)
-            .add_systems(Update, set_score_text);
+        app.add_systems(OnEnter(GameState::Game), spawn_score)
+            .add_systems(Update, set_score_text.in_set(GameSet));
     }
 }
 

@@ -1,19 +1,32 @@
 use avian2d::prelude::*;
-use bevy::{prelude::*, window::PrimaryWindow};
+use bevy::{log::tracing::instrument, prelude::*, window::PrimaryWindow};
 use rand::RngExt;
 
-use crate::game::{asteroids::asteroid_component::Asteroid, spaceship::spaceship_plugin::Bullet};
+use crate::{
+    GameState,
+    game::{
+        asteroids::asteroid_component::Asteroid, game_plugin::GameSet,
+        spaceship::spaceship_plugin::Bullet,
+    },
+};
 
 pub struct AsteroidPlugin;
 
 impl Plugin for AsteroidPlugin {
     fn build(&self, app: &mut App) {
+        // Adds avian2d.
         app.add_plugins(PhysicsPlugins::default())
             .add_plugins(PhysicsDebugPlugin::default());
-        app.add_systems(Update, maintain_asteroids)
-            .add_systems(Update, out_of_bounds_asteroid)
-            .add_systems(Update, rotate_asteroids)
-            .add_systems(Update, move_asteroid);
+        app.add_systems(
+            Update,
+            (
+                maintain_asteroids,
+                out_of_bounds_asteroid,
+                rotate_asteroids,
+                move_asteroid,
+            )
+                .in_set(GameSet),
+        );
     }
 }
 
