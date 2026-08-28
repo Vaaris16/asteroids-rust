@@ -3,19 +3,20 @@ use bevy::prelude::*;
 
 use crate::{
     background::background_plugin::BackgroundPlugin, game::game_plugin::GamePlugin,
-    player::player_plugin::PlayerPlugin,
+    player::player_plugin::PlayerPlugin, splashscreen::splash_screen_plugin::SplashScreenPlugin,
 };
 
 mod background;
 mod game;
 mod player;
+mod splashscreen;
 
 pub const BACKGROUND_COLOR: Color = Color::BLACK;
 
 #[derive(Default, States, Hash, Eq, Debug, PartialEq, Clone)]
 pub enum GameState {
-    SplashScreen,
     #[default]
+    SplashScreen,
     Game,
     Retry,
 }
@@ -33,6 +34,7 @@ fn main() {
             BackgroundPlugin,
             PlayerPlugin,
             GamePlugin,
+            SplashScreenPlugin,
         ))
         .init_state::<GameState>()
         .run();
