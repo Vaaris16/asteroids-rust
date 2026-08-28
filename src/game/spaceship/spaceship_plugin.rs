@@ -23,7 +23,7 @@ const BULLET_OFFSET: Vec3 = Vec3::new(0., 75., 0.);
 const BULLET_SPEED: f32 = 600.;
 
 #[derive(Component)]
-struct SpaceShip;
+pub struct SpaceShip;
 
 #[derive(Component)]
 pub struct Bullet;
@@ -35,6 +35,13 @@ fn spawn_space_ship(mut commands: Commands, assets_server: Res<AssetServer>) {
             image: assets_server.load(SPACE_SHIP_IMAGE_PATH),
             ..Default::default()
         },
+        Collider::triangle(
+            Vec2::new(-37.5, -50.),
+            Vec2::new(37.5, -50.),
+            Vec2::new(0., 50.),
+        ),
+        CollisionEventsEnabled,
+        RigidBody::Kinematic,
         SpaceShip,
         Transform::default(),
     ));
