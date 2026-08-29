@@ -8,6 +8,7 @@ use crate::{
 
 mod background;
 mod game;
+mod game_fonts;
 mod player;
 mod splashscreen;
 
