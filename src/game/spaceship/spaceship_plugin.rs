@@ -8,7 +8,8 @@ pub struct SpaceShipPlugin;
 impl Plugin for SpaceShipPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(OnEnter(GameState::Game), spawn_space_ship)
-            .add_systems(Update, space_ship_controls.in_set(GameSet));
+            .add_systems(Update, space_ship_controls.in_set(GameSet))
+            .add_systems(OnExit(GameState::Game), cleanup_spaceship);
     }
 }
 
@@ -92,4 +93,9 @@ fn spawn_bullet(
             ..Default::default()
         },
     ));
+}
+
+// Removes the space ship
+fn cleanup_spaceship(mut commands: Commands, space_ship: Single<Entity, With<SpaceShip>>) {
+    commands.entity(*space_ship).despawn();
 }

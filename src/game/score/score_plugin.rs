@@ -8,7 +8,8 @@ impl Plugin for ScorePlugin {
     fn build(&self, app: &mut App) {
         app.insert_resource(Score { score: 0 });
         app.add_systems(OnEnter(GameState::Game), spawn_score)
-            .add_systems(Update, set_score_text.in_set(GameSet));
+            .add_systems(Update, set_score_text.in_set(GameSet))
+            .add_systems(OnExit(GameState::Game), cleanup_score);
     }
 }
 
@@ -21,7 +22,7 @@ struct ScoreText;
 // Resource that stores the player's current score.
 #[derive(Resource)]
 pub struct Score {
-    score: i32,
+    pub score: i32,
 }
 
 impl Score {
@@ -57,4 +58,9 @@ fn spawn_score(mut commands: Commands, score: Res<Score>) {
 // Updates the score text with the current Score
 fn set_score_text(mut score_text: Single<&mut Text, With<ScoreText>>, score: ResMut<Score>) {
     score_text.0 = score.score.to_string();
+}
+
+// Removes score text.
+fn cleanup_score(mut commands: Commands, score_text: Single<Entity, With<ScoreText>>) {
+    commands.entity(*score_text).despawn();
 }

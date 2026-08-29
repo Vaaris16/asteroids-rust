@@ -26,7 +26,8 @@ impl Plugin for AsteroidPlugin {
                 move_asteroid,
             )
                 .in_set(GameSet),
-        );
+        )
+        .add_systems(OnExit(GameState::Game), cleanup_asteroids);
     }
 }
 
@@ -101,5 +102,12 @@ fn out_of_bounds_asteroid(
 fn rotate_asteroids(asteroids: Query<(&mut Transform, &Asteroid), With<Asteroid>>) {
     for (mut asteroid_trans, asteroid) in asteroids {
         asteroid_trans.rotate_z(asteroid.rotation_factor);
+    }
+}
+
+// Removes any remaining asteroids.
+fn cleanup_asteroids(mut commands: Commands, asteroids: Query<Entity, With<Asteroid>>) {
+    for asteroid in asteroids {
+        commands.entity(asteroid).despawn();
     }
 }

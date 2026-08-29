@@ -20,6 +20,7 @@ struct SplashScreenComponent;
 #[derive(Component)]
 struct StartButton;
 
+// Spawns the splash screen.
 fn splash_screen(mut commands: Commands, assets_server: Res<AssetServer>) {
     commands.spawn((
         Node {
@@ -36,6 +37,7 @@ fn splash_screen(mut commands: Commands, assets_server: Res<AssetServer>) {
     ));
 }
 
+// Spawns the splash screen title.
 fn splash_title(assets_server: &AssetServer) -> impl Bundle {
     (
         Text::new("ASTEROID"),
@@ -50,6 +52,7 @@ fn splash_title(assets_server: &AssetServer) -> impl Bundle {
     )
 }
 
+// Spawns the start button
 fn start_button(assets_server: &AssetServer) -> impl Bundle {
     (
         Button,
@@ -80,6 +83,7 @@ fn start_button(assets_server: &AssetServer) -> impl Bundle {
     )
 }
 
+// Handles interactions with the start button
 fn button_interactions(
     mut game_state: ResMut<NextState<GameState>>,
     interaction_query: Query<
@@ -97,6 +101,7 @@ fn button_interactions(
     }
 }
 
+// Cleans up the splash screen
 fn clean_up_splash_screen(
     mut commands: Commands,
     splash_screen_entity: Single<Entity, With<SplashScreenComponent>>,

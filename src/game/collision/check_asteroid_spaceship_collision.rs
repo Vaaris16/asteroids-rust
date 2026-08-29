@@ -19,7 +19,7 @@ pub fn check_asteroid_spaceship_collision(
         if (asteroids.contains(entity1) && space_ship.contains(entity2))
             || (asteroids.contains(entity2) && space_ship.contains(entity1))
         {
-            next_state.set(GameState::SplashScreen);
+            next_state.set(GameState::Retry);
         }
     }
 }

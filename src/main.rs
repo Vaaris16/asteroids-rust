@@ -2,13 +2,16 @@
 use bevy::prelude::*;
 
 use crate::{
+    GameState::Retry,
     core::{background::background_plugin::BackgroundPlugin, player::player_plugin::PlayerPlugin},
     game::game_plugin::GamePlugin,
+    retry::retry_plugin::RetryPlugin,
     splashscreen::splash_screen_plugin::SplashScreenPlugin,
 };
 
 mod core;
 mod game;
+mod retry;
 mod splashscreen;
 
 pub const BACKGROUND_COLOR: Color = Color::BLACK;
@@ -35,6 +38,7 @@ fn main() {
             PlayerPlugin,
             GamePlugin,
             SplashScreenPlugin,
+            RetryPlugin,
         ))
         .init_state::<GameState>()
         .run();
