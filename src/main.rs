@@ -2,14 +2,13 @@
 use bevy::prelude::*;
 
 use crate::{
-    background::background_plugin::BackgroundPlugin, game::game_plugin::GamePlugin,
-    player::player_plugin::PlayerPlugin, splashscreen::splash_screen_plugin::SplashScreenPlugin,
+    core::{background::background_plugin::BackgroundPlugin, player::player_plugin::PlayerPlugin},
+    game::game_plugin::GamePlugin,
+    splashscreen::splash_screen_plugin::SplashScreenPlugin,
 };
 
-mod background;
+mod core;
 mod game;
-mod game_fonts;
-mod player;
 mod splashscreen;
 
 pub const BACKGROUND_COLOR: Color = Color::BLACK;

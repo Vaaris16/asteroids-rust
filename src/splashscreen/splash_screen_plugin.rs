@@ -1,6 +1,6 @@
 use crate::{
     GameState::{self, SplashScreen},
-    game_fonts::game_fonts::GameFonts,
+    core::game_fonts::game_fonts::GameFonts,
 };
 use bevy::{input::gamepad::GamepadButton::Start, prelude::*};
 
