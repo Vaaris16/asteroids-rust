@@ -1,7 +1,9 @@
 use bevy::{log::tracing_subscriber::fmt::format, prelude::*};
 
 use crate::{
+    BORDER_COLOR,
     GameState::{self, Game},
+    TEXT_COLOR,
     core::game_fonts::game_fonts::GameFonts,
     game::score::score_plugin::Score,
 };
@@ -55,7 +57,7 @@ fn modal_window(assets_server: &AssetServer, score: Res<Score>) -> impl Bundle {
             padding: UiRect::all(px(50)),
             ..Default::default()
         },
-        BorderColor::all(Color::WHITE),
+        BorderColor::all(BORDER_COLOR),
         BackgroundColor(Color::BLACK),
         children![
             score_title(assets_server),
@@ -76,7 +78,7 @@ fn score_title(assets_server: &AssetServer) -> impl Bundle {
                 .into(),
             ..Default::default()
         },
-        TextColor(Color::WHITE),
+        TextColor(TEXT_COLOR),
     )
 }
 
@@ -88,7 +90,7 @@ fn final_score(score: Res<Score>) -> impl Bundle {
             ..Default::default()
         },
         Text::new(score.score.to_string()),
-        TextColor(Color::WHITE),
+        TextColor(TEXT_COLOR),
         TextFont {
             font_size: px(100).into(),
             ..Default::default()
@@ -111,7 +113,7 @@ fn retry_button(assets_server: &AssetServer) -> impl Bundle {
             ..Default::default()
         },
         BackgroundColor(Color::BLACK),
-        BorderColor::all(Color::WHITE),
+        BorderColor::all(BORDER_COLOR),
         RetryButton,
         children![(
             Text::new("Retry"),
@@ -122,7 +124,7 @@ fn retry_button(assets_server: &AssetServer) -> impl Bundle {
                     .into(),
                 ..Default::default()
             },
-            TextColor(Color::WHITE),
+            TextColor(TEXT_COLOR),
         )],
     )
 }

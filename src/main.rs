@@ -1,4 +1,5 @@
 #![allow(warnings)]
+use avian2d::PhysicsPlugins;
 use bevy::prelude::*;
 
 use crate::{
@@ -15,6 +16,8 @@ mod retry;
 mod splashscreen;
 
 pub const BACKGROUND_COLOR: Color = Color::BLACK;
+pub const TEXT_COLOR: Color = Color::WHITE;
+pub const BORDER_COLOR: Color = Color::WHITE;
 
 #[derive(Default, States, Hash, Eq, Debug, PartialEq, Clone)]
 pub enum GameState {
@@ -34,6 +37,7 @@ fn main() {
                 }),
                 ..Default::default()
             }),
+            PhysicsPlugins::default(),
             BackgroundPlugin,
             PlayerPlugin,
             GamePlugin,

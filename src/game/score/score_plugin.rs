@@ -1,6 +1,8 @@
 use bevy::{core_pipeline::oit::resolve::node, prelude::*};
 
-use crate::{GameState, core::game_fonts::game_fonts::GameFonts, game::game_plugin::GameSet};
+use crate::{
+    GameState, TEXT_COLOR, core::game_fonts::game_fonts::GameFonts, game::game_plugin::GameSet,
+};
 
 pub struct ScorePlugin;
 
@@ -52,7 +54,7 @@ fn spawn_score(mut commands: Commands, score: Res<Score>, assets_server: Res<Ass
                         .into(),
                     ..Default::default()
                 },
-                TextColor(Color::WHITE),
+                TextColor(TEXT_COLOR),
                 ScoreText,
             ));
         });

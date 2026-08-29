@@ -14,9 +14,6 @@ pub struct AsteroidPlugin;
 
 impl Plugin for AsteroidPlugin {
     fn build(&self, app: &mut App) {
-        // Adds avian2d.
-        app.add_plugins(PhysicsPlugins::default())
-            .add_plugins(PhysicsDebugPlugin::default());
         app.add_systems(
             Update,
             (

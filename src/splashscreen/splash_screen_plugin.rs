@@ -1,5 +1,7 @@
 use crate::{
+    BORDER_COLOR,
     GameState::{self, SplashScreen},
+    TEXT_COLOR,
     core::game_fonts::game_fonts::GameFonts,
 };
 use bevy::{input::gamepad::GamepadButton::Start, prelude::*};
@@ -48,7 +50,7 @@ fn splash_title(assets_server: &AssetServer) -> impl Bundle {
                 .into(),
             ..Default::default()
         },
-        TextColor(Color::WHITE),
+        TextColor(TEXT_COLOR),
     )
 }
 
@@ -66,12 +68,12 @@ fn start_button(assets_server: &AssetServer) -> impl Bundle {
             padding: UiRect::all(Val::Px(1.0)),
             ..Default::default()
         },
-        BorderColor::all(Color::WHITE),
+        BorderColor::all(BORDER_COLOR),
         BackgroundColor(Color::BLACK),
         StartButton,
         children![(
             Text::new("START"),
-            TextColor(Color::WHITE),
+            TextColor(TEXT_COLOR),
             TextFont {
                 font: assets_server
                     .load(GameFonts::ComfortaaMedium.font_path())
