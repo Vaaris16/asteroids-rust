@@ -54,60 +54,44 @@ impl Asteroid {
     }
     // Returns random position and velocity for the asteroid.
     pub fn rand_pos_vel(&self) -> (Vec3, Vec3) {
+        let mut rng = rand::rng();
+        let pos_y = Vec3::new(
+            rng.random_range(-self.window_x / 2.0..self.window_x / 2.0),
+            self.window_y / 2.,
+            0.,
+        );
+
+        let pos_x = Vec3::new(
+            self.window_x / 2.,
+            rng.random_range(-self.window_y / 2.0..self.window_y / 2.0),
+            0.,
+        );
+
         match self.side {
             Side::Top => {
-                let mut rng = rand::rng();
-                let pos = Vec3::new(
-                    rng.random_range(-self.window_x / 2.0..self.window_x / 2.0),
-                    self.window_y / 2.,
-                    0.,
-                );
-
                 let vel = Vec3::new(rng.random_range(-3.0..3.0), rng.random_range(-3.0..0.0), 0.);
-
-                (pos, vel)
+                (pos_y, vel)
             }
 
             Side::Bottom => {
-                let mut rng = rand::rng();
-                let pos = Vec3::new(
-                    rng.random_range(-self.window_x / 2.0..self.window_x / 2.0),
-                    -self.window_y / 2.,
-                    0.,
-                );
-
                 let vel = Vec3::new(rng.random_range(-3.0..3.0), rng.random_range(3.0..6.0), 0.);
 
-                (pos, vel)
+                (pos_y, vel)
             }
             Side::Right => {
-                let mut rng = rand::rng();
-                let pos = Vec3::new(
-                    self.window_x / 2.,
-                    rng.random_range(-self.window_y / 2.0..self.window_y / 2.0),
-                    0.,
-                );
-
                 let vel = Vec3::new(
                     rng.random_range(-6.0..-3.0),
                     rng.random_range(-3.0..3.0),
                     0.,
                 );
 
-                (pos, vel)
+                (pos_x, vel)
             }
 
             Side::Left => {
-                let mut rng = rand::rng();
-                let pos = Vec3::new(
-                    -self.window_x / 2.,
-                    rng.random_range(-self.window_y / 2.0..self.window_y / 2.0),
-                    0.,
-                );
-
                 let vel = Vec3::new(rng.random_range(3.0..6.0), rng.random_range(-6.0..3.0), 0.);
 
-                (pos, vel)
+                (pos_x, vel)
             }
         }
     }
