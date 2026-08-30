@@ -1,5 +1,5 @@
 use avian2d::prelude::*;
-use bevy::prelude::*;
+use bevy::{log::tracing::Instrument, prelude::*};
 
 use crate::{GameState, game::game_plugin::GameSet};
 
@@ -9,6 +9,7 @@ impl Plugin for SpaceShipPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(OnEnter(GameState::Game), spawn_space_ship)
             .add_systems(Update, space_ship_controls.in_set(GameSet))
+            .add_systems(Update, out_of_bounds_bullets.in_set(GameSet))
             .add_systems(OnExit(GameState::Game), cleanup_spaceship);
     }
 }
@@ -98,4 +99,21 @@ fn spawn_bullet(
 // Removes the space ship
 fn cleanup_spaceship(mut commands: Commands, space_ship: Single<Entity, With<SpaceShip>>) {
     commands.entity(*space_ship).despawn();
+}
+
+fn out_of_bounds_bullets(
+    bullets: Query<(&mut Transform, Entity), With<Bullet>>,
+    window_s: Single<&Window>,
+    mut commands: Commands,
+) {
+    for (bullet_trans, bullet_entity) in bullets {
+        if bullet_trans.translation.y > window_s.height() / 2.
+            || bullet_trans.translation.y < -window_s.height() / 2.
+            || bullet_trans.translation.x > window_s.width() / 2.
+            || bullet_trans.translation.x < -window_s.width() / 2.
+        {
+            commands.entity(bullet_entity).despawn();
+            println!("something")
+        }
+    }
 }
