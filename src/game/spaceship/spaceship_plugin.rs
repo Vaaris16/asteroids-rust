@@ -18,6 +18,10 @@ impl Plugin for SpaceShipPlugin {
 const SPACE_SHIP_IMAGE_PATH: &str = "space_ship.png";
 // Defines the amount the space ship rotates per update.
 const SPACE_SHIP_ROTATION: f32 = 0.1;
+// Defines the 3 points used for space ship collider.
+const SPACE_SHIP_POINT_A: Vec2 = Vec2::new(-37.5, -50.);
+const SPACE_SHIP_POINT_B: Vec2 = Vec2::new(37.5, -50.);
+const SPACE_SHIP_POINT_C: Vec2 = Vec2::new(0., -50.);
 
 // Image path of the bullet.
 const BULLET_IMAGE_PATH: &str = "bullet.png";
@@ -25,6 +29,8 @@ const BULLET_IMAGE_PATH: &str = "bullet.png";
 const BULLET_OFFSET: Vec3 = Vec3::new(0., 75., 0.);
 // Defines the bullet speed.
 const BULLET_SPEED: f32 = 600.;
+// Defines the width and height of the bullet.
+const BULLET_SIZE: [f32; 2] = [15., 45.];
 
 #[derive(Component)]
 pub struct SpaceShip;
@@ -39,11 +45,7 @@ fn spawn_space_ship(mut commands: Commands, assets_server: Res<AssetServer>) {
             image: assets_server.load(SPACE_SHIP_IMAGE_PATH),
             ..Default::default()
         },
-        Collider::triangle(
-            Vec2::new(-37.5, -50.),
-            Vec2::new(37.5, -50.),
-            Vec2::new(0., 50.),
-        ),
+        Collider::triangle(SPACE_SHIP_POINT_A, SPACE_SHIP_POINT_B, SPACE_SHIP_POINT_C),
         CollisionEventsEnabled,
         RigidBody::Kinematic,
         SpaceShip,
@@ -84,7 +86,7 @@ fn spawn_bullet(
             ..Default::default()
         },
         Bullet,
-        Collider::rectangle(15., 45.),
+        Collider::rectangle(BULLET_SIZE[0], BULLET_SIZE[1]),
         CollisionEventsEnabled,
         RigidBody::Kinematic,
         LinearVelocity(((space_ship.rotation * Vec3::Y) * BULLET_SPEED).truncate()),
@@ -106,14 +108,15 @@ fn out_of_bounds_bullets(
     window_s: Single<&Window>,
     mut commands: Commands,
 ) {
+    let w_width = window_s.width() / 2.;
+    let w_height = window_s.height() / 2.;
     for (bullet_trans, bullet_entity) in bullets {
-        if bullet_trans.translation.y > window_s.height() / 2.
-            || bullet_trans.translation.y < -window_s.height() / 2.
-            || bullet_trans.translation.x > window_s.width() / 2.
-            || bullet_trans.translation.x < -window_s.width() / 2.
+        if bullet_trans.translation.y > w_height
+            || bullet_trans.translation.y < -w_height
+            || bullet_trans.translation.x > w_width
+            || bullet_trans.translation.x < -w_width
         {
             commands.entity(bullet_entity).despawn();
-            println!("something")
         }
     }
 }

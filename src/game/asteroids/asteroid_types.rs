@@ -7,13 +7,17 @@ pub enum AsteroidType {
     AsteroidLarge,
 }
 
+const ASTEROID_SMALL_IMAGE_PATH: &str = "asteroids_images/asteroid_small.png";
+const ASTEROID_MEDIUM_IMAGE_PATH: &str = "asteroids_images/asteroid_medium.png";
+const ASTEROID_LARGE_IMAGE_PATH: &str = "asteroids_images/asteroid_large.png";
+
 impl AsteroidType {
     // Returns the image path based on the AsteroidType.
     pub fn path(&self) -> &'static str {
         match self {
-            AsteroidType::AsteroidSmall => "asteroids_images/asteroid_small.png",
-            AsteroidType::AsteroidMedium => "asteroids_images/asteroid_medium.png",
-            AsteroidType::AsteroidLarge => "asteroids_images/asteroid_large.png",
+            AsteroidType::AsteroidSmall => ASTEROID_SMALL_IMAGE_PATH,
+            AsteroidType::AsteroidMedium => ASTEROID_MEDIUM_IMAGE_PATH,
+            AsteroidType::AsteroidLarge => ASTEROID_LARGE_IMAGE_PATH,
         }
     }
 

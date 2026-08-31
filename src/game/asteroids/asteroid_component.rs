@@ -1,6 +1,15 @@
-use crate::game::asteroids::{asteroid_plugin::Side, asteroid_types::AsteroidType};
+use crate::game::asteroids::{asteroid_sides::Side, asteroid_types::AsteroidType};
 use bevy::prelude::*;
 use rand::RngExt;
+
+const SMALL_ASTEROID_RADIUS: f32 = 50.;
+const MEDIUM_ASTEROID_RADIUS: f32 = 100.;
+const LARGE_ASTEROID_RADIUS: f32 = 125.;
+
+const DEFAULT_VELOCITY_ASTEROID: Vec3 = Vec3::ZERO;
+
+const MIN_ROTATION_FACTOR_ASTEROID: f32 = 0.01;
+const MAX_ROTATION_FACTOR_ASTEROID: f32 = 0.03;
 
 // Component used to identify asteroids
 #[derive(Component)]
@@ -20,8 +29,8 @@ impl Asteroid {
         let asteroid_type = AsteroidType::rand_asteroid_type();
         let collider_radius = Self::get_collider_radius(&asteroid_type);
         Self {
-            velocity: Vec3::ZERO,
-            side: Self::rand_side(),
+            velocity: DEFAULT_VELOCITY_ASTEROID,
+            side: Side::rand_side(),
             rotation_factor: Self::rand_rotation_factor(),
             window_x,
             window_y,
@@ -32,39 +41,29 @@ impl Asteroid {
     // Returns the collider_radius based on the AsteroidType
     fn get_collider_radius(asteroid_type: &AsteroidType) -> f32 {
         match asteroid_type {
-            AsteroidType::AsteroidSmall => 50.,
-            AsteroidType::AsteroidMedium => 100.,
-            AsteroidType::AsteroidLarge => 125.,
+            AsteroidType::AsteroidSmall => SMALL_ASTEROID_RADIUS,
+            AsteroidType::AsteroidMedium => MEDIUM_ASTEROID_RADIUS,
+            AsteroidType::AsteroidLarge => LARGE_ASTEROID_RADIUS,
         }
     }
     // Returns a random rotation factor
     fn rand_rotation_factor() -> f32 {
-        rand::rng().random_range(0.01..0.03)
-    }
-    // Returns a random Side
-    fn rand_side() -> Side {
-        let mut rng = rand::rng();
-        match rng.random_range(0..4) {
-            0 => Side::Top,
-            1 => Side::Bottom,
-            2 => Side::Right,
-            3 => Side::Left,
-            _ => unreachable!(),
-        }
+        rand::rng().random_range(MIN_ROTATION_FACTOR_ASTEROID..MAX_ROTATION_FACTOR_ASTEROID)
     }
     // Returns random position and velocity for the asteroid.
     pub fn rand_pos_vel(&self) -> (Vec3, Vec3) {
         let mut rng = rand::rng();
-        let pos_y = Vec3::new(
-            rng.random_range(-self.window_x / 2.0..self.window_x / 2.0),
-            self.window_y / 2.,
-            0.,
-        );
-
-        let pos_x = Vec3::new(
-            self.window_x / 2.,
-            rng.random_range(-self.window_y / 2.0..self.window_y / 2.0),
-            0.,
+        let (pos_y, pos_x) = (
+            Vec3::new(
+                rng.random_range(-self.window_x / 2.0..self.window_x / 2.0),
+                self.window_y / 2.,
+                0.,
+            ),
+            Vec3::new(
+                self.window_x / 2.,
+                rng.random_range(-self.window_y / 2.0..self.window_y / 2.0),
+                0.,
+            ),
         );
 
         match self.side {

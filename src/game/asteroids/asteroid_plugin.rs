@@ -10,6 +10,8 @@ use crate::{
     },
 };
 
+const MAX_ASTEROIDS: usize = 5;
+
 pub struct AsteroidPlugin;
 
 impl Plugin for AsteroidPlugin {
@@ -26,14 +28,6 @@ impl Plugin for AsteroidPlugin {
         )
         .add_systems(OnExit(GameState::Game), cleanup_asteroids);
     }
-}
-
-// Enum to define the sides at which the asteroids can spawn.
-pub enum Side {
-    Top,
-    Bottom,
-    Right,
-    Left,
 }
 
 // Spawns an asteroid.
@@ -73,22 +67,23 @@ fn maintain_asteroids(
     assets_server: Res<AssetServer>,
 ) {
     let asteroid_count = asteroids.iter().count();
-    if asteroid_count <= 3 {
+    if asteroid_count <= MAX_ASTEROIDS {
         spawn_asteroid(window_s, commands, assets_server);
     }
 }
 
 // Checks whether asteroids are out of bounds and despawns them.
 fn out_of_bounds_asteroid(
-    asteroids: Query<(&mut Transform, Entity), With<Asteroid>>,
+    asteroids: Query<(&mut Transform, Entity, &Asteroid), With<Asteroid>>,
     window_s: Single<&Window, With<PrimaryWindow>>,
     mut commands: Commands,
 ) {
-    for (asteroid_trans, asteroid_entity) in asteroids {
-        if asteroid_trans.translation.y > (window_s.height() + 100.0)
-            || asteroid_trans.translation.y < (-window_s.height() - 100.0)
-            || asteroid_trans.translation.x > (window_s.width() + 100.0)
-            || asteroid_trans.translation.x < (-window_s.height() + -100.0)
+    for (asteroid_trans, asteroid_entity, asteroid) in asteroids {
+        let asteroid_size = asteroid.collider_radius;
+        if asteroid_trans.translation.y > (window_s.height() + asteroid_size)
+            || asteroid_trans.translation.y < (-window_s.height() - asteroid_size)
+            || asteroid_trans.translation.x > (window_s.width() + asteroid_size)
+            || asteroid_trans.translation.x < (-window_s.height() - asteroid_size)
         {
             commands.entity(asteroid_entity).despawn();
         }
