@@ -44,6 +44,7 @@ impl Asteroid {
             collider_radius,
         }
     }
+    // Returns the asteroid image's path.
     fn asteroid_path() -> &'static str {
         match rand::rng().random_range(0..3) {
             0 => ASTEROID_PATH_1,
@@ -52,7 +53,7 @@ impl Asteroid {
             _ => unreachable!(),
         }
     }
-    // Returns the collider_radius based on the AsteroidType
+    // Returns the collider_radius based on the AsteroidType.
     fn get_collider_radius(asteroid_type: &AsteroidType) -> f32 {
         match asteroid_type {
             AsteroidType::AsteroidSmall => SMALL_ASTEROID_RADIUS,
