@@ -16,6 +16,12 @@ impl Plugin for SplashScreenPlugin {
     }
 }
 
+const FONT_SIZE_SPLASH_TITLE: i32 = 150;
+const START_BUTTON_FONT_SIZE: i32 = 30;
+
+const SPLASH_TITLE: &str = "ASTEROID";
+const START_BUTTON_TEXT: &str = "START";
+
 #[derive(Component)]
 struct SplashScreenComponent;
 
@@ -42,9 +48,9 @@ fn splash_screen(mut commands: Commands, assets_server: Res<AssetServer>) {
 // Spawns the splash screen title.
 fn splash_title(assets_server: &AssetServer) -> impl Bundle {
     (
-        Text::new("ASTEROID"),
+        Text::new(SPLASH_TITLE),
         TextFont {
-            font_size: px(150).into(),
+            font_size: px(FONT_SIZE_SPLASH_TITLE).into(),
             font: assets_server
                 .load(GameFonts::ComfortaaBold.font_path())
                 .into(),
@@ -72,13 +78,13 @@ fn start_button(assets_server: &AssetServer) -> impl Bundle {
         BackgroundColor(Color::BLACK),
         StartButton,
         children![(
-            Text::new("START"),
+            Text::new(START_BUTTON_TEXT),
             TextColor(TEXT_COLOR),
             TextFont {
                 font: assets_server
                     .load(GameFonts::ComfortaaMedium.font_path())
                     .into(),
-                font_size: px(30).into(),
+                font_size: px(START_BUTTON_FONT_SIZE).into(),
                 ..Default::default()
             },
         )],
