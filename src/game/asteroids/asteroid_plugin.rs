@@ -42,7 +42,8 @@ fn spawn_asteroid(
 
     commands.spawn((
         Sprite {
-            image: assets_server.load(asteroid.asteroid_type.path()),
+            image: assets_server.load(asteroid.asteroid_path),
+            custom_size: Some(Vec2::splat(asteroid.collider_radius * 2.)),
             ..Default::default()
         },
         Collider::circle(asteroid.collider_radius),
