@@ -23,6 +23,10 @@ impl Plugin for RetryPlugin {
     }
 }
 
+const SCORE_TITLE_FONT_SIZE: f32 = 75.;
+const FINAL_SCORE_FONT_SIZE: f32 = 100.;
+const RETRY_BUTTON_TEXT_FONT_SIZE: f32 = 40.;
+
 #[derive(Component)]
 struct RetryPage;
 
@@ -72,7 +76,7 @@ fn score_title(assets_server: &AssetServer) -> impl Bundle {
     (
         Text::new("Score"),
         TextFont {
-            font_size: px(75).into(),
+            font_size: px(SCORE_TITLE_FONT_SIZE).into(),
             font: assets_server
                 .load(GameFonts::ComfortaaBold.font_path())
                 .into(),
@@ -92,7 +96,7 @@ fn final_score(score: Res<Score>) -> impl Bundle {
         Text::new(score.score.to_string()),
         TextColor(TEXT_COLOR),
         TextFont {
-            font_size: px(100).into(),
+            font_size: px(FINAL_SCORE_FONT_SIZE).into(),
             ..Default::default()
         },
     )
@@ -118,7 +122,7 @@ fn retry_button(assets_server: &AssetServer) -> impl Bundle {
         children![(
             Text::new("Retry"),
             TextFont {
-                font_size: px(40).into(),
+                font_size: px(RETRY_BUTTON_TEXT_FONT_SIZE).into(),
                 font: assets_server
                     .load(GameFonts::ComfortaaBold.font_path())
                     .into(),
