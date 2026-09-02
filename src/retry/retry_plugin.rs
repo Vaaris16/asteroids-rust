@@ -1,7 +1,7 @@
 use bevy::{log::tracing_subscriber::fmt::format, prelude::*};
 
 use crate::{
-    BORDER_COLOR,
+    BORDER_COLOR, FOCUS_BORDER_COLOR, FOCUS_TEXT_COLOR,
     GameState::{self, Game},
     TEXT_COLOR,
     core::game_fonts::game_fonts::GameFonts,
@@ -27,11 +27,26 @@ const SCORE_TITLE_FONT_SIZE: f32 = 75.;
 const FINAL_SCORE_FONT_SIZE: f32 = 100.;
 const RETRY_BUTTON_TEXT_FONT_SIZE: f32 = 40.;
 
+const MODAL_WINDOW_DIMENSIONS_PERCENT: Vec2 = Vec2::new(33., 70.);
+const MODAL_WINDOW_BORDER_RADIUS: f32 = 20.;
+const MODAL_WINDOW_BORDER_THICKNESS: f32 = 2.;
+
+const SCORE_TITLE: &str = "Score";
+
+const RETRY_BUTTON_DIMENSIONS: Vec2 = Vec2::new(200., 80.);
+const RETRY_BUTTON_BORDER_RADIUS: f32 = 20.;
+const RETRY_BUTTON_BORDER_THICKNESS: f32 = 2.5;
+
+const RETRY_BUTTON_TEXT: &str = "retry";
+
 #[derive(Component)]
 struct RetryPage;
 
 #[derive(Component)]
 struct RetryButton;
+
+#[derive(Component)]
+struct RetryButtonText;
 
 // Spawns the main retry page.
 fn retry_window(mut commands: Commands, assets_server: Res<AssetServer>, score: Res<Score>) {
@@ -52,12 +67,12 @@ fn retry_window(mut commands: Commands, assets_server: Res<AssetServer>, score: 
 fn modal_window(assets_server: &AssetServer, score: Res<Score>) -> impl Bundle {
     (
         Node {
-            width: percent(33),
-            height: percent(70),
+            width: percent(MODAL_WINDOW_DIMENSIONS_PERCENT.x),
+            height: percent(MODAL_WINDOW_DIMENSIONS_PERCENT.y),
             align_items: AlignItems::Center,
             flex_direction: FlexDirection::Column,
-            border: UiRect::all(px(2)),
-            border_radius: BorderRadius::all(px(20)),
+            border: UiRect::all(px(MODAL_WINDOW_BORDER_THICKNESS)),
+            border_radius: BorderRadius::all(px(MODAL_WINDOW_BORDER_RADIUS)),
             padding: UiRect::all(px(50)),
             ..Default::default()
         },
@@ -74,7 +89,7 @@ fn modal_window(assets_server: &AssetServer, score: Res<Score>) -> impl Bundle {
 // Spawns the score title.
 fn score_title(assets_server: &AssetServer) -> impl Bundle {
     (
-        Text::new("Score"),
+        Text::new(SCORE_TITLE),
         TextFont {
             font_size: px(SCORE_TITLE_FONT_SIZE).into(),
             font: assets_server
@@ -107,11 +122,11 @@ fn retry_button(assets_server: &AssetServer) -> impl Bundle {
     (
         Button,
         Node {
-            width: px(200),
-            height: px(80),
-            border_radius: BorderRadius::all(px(20.)),
+            width: px(RETRY_BUTTON_DIMENSIONS.x),
+            height: px(RETRY_BUTTON_DIMENSIONS.y),
+            border_radius: BorderRadius::all(px(RETRY_BUTTON_BORDER_RADIUS)),
             margin: UiRect::top(px(50)),
-            border: UiRect::all(px(2.5)),
+            border: UiRect::all(px(RETRY_BUTTON_BORDER_THICKNESS)),
             justify_content: JustifyContent::Center,
             align_items: AlignItems::Center,
             ..Default::default()
@@ -120,7 +135,8 @@ fn retry_button(assets_server: &AssetServer) -> impl Bundle {
         BorderColor::all(BORDER_COLOR),
         RetryButton,
         children![(
-            Text::new("Retry"),
+            RetryButtonText,
+            Text::new(RETRY_BUTTON_TEXT),
             TextFont {
                 font_size: px(RETRY_BUTTON_TEXT_FONT_SIZE).into(),
                 font: assets_server
@@ -136,14 +152,25 @@ fn retry_button(assets_server: &AssetServer) -> impl Bundle {
 // Handles interactions with the retry button.
 fn retry_button_interactions(
     mut game_state: ResMut<NextState<GameState>>,
-    interaction_query: Query<(&Interaction, &Button), (With<RetryButton>, Changed<Interaction>)>,
+    retry_button: Query<
+        (&Interaction, &mut BorderColor),
+        (With<RetryButton>, Changed<Interaction>),
+    >,
+    mut retry_button_text: Single<&mut TextColor, With<RetryButtonText>>,
 ) {
-    for (interaction, button) in interaction_query {
+    for (interaction, mut border_color) in retry_button {
         match *interaction {
             Interaction::Pressed => {
                 game_state.set(GameState::SplashScreen);
             }
-            _ => (),
+            Interaction::Hovered => {
+                retry_button_text.0 = FOCUS_TEXT_COLOR;
+                *border_color = BorderColor::all(FOCUS_BORDER_COLOR);
+            }
+            Interaction::None => {
+                retry_button_text.0 = TEXT_COLOR;
+                *border_color = BorderColor::all(BORDER_COLOR);
+            }
         }
     }
 }

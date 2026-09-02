@@ -1,10 +1,10 @@
 use crate::{
     BORDER_COLOR, FOCUS_BORDER_COLOR, FOCUS_TEXT_COLOR,
-    GameState::{self, SplashScreen},
+    GameState::{self},
     TEXT_COLOR,
     core::game_fonts::game_fonts::GameFonts,
 };
-use bevy::{input::gamepad::GamepadButton::Start, prelude::*};
+use bevy::prelude::*;
 
 pub struct SplashScreenPlugin;
 
@@ -102,12 +102,12 @@ fn start_button(assets_server: &AssetServer) -> impl Bundle {
 fn button_interactions(
     mut game_state: ResMut<NextState<GameState>>,
     start_button: Query<
-        (&mut Node, &Interaction, &mut BorderColor),
+        (&Interaction, &mut BorderColor),
         (Changed<Interaction>, With<StartButton>),
     >,
     mut start_button_text_color: Single<&mut TextColor, With<StartButtonText>>,
 ) {
-    for (mut button_node, interactions, mut border_color) in start_button {
+    for (interactions, mut border_color) in start_button {
         match *interactions {
             Interaction::Pressed => {
                 game_state.set(GameState::Game);
