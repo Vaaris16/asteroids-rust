@@ -2,9 +2,9 @@ use crate::game::asteroids::{asteroid_sides::Side, asteroid_types::AsteroidType}
 use bevy::prelude::*;
 use rand::RngExt;
 
-const SMALL_ASTEROID_RADIUS: f32 = 50.;
-const MEDIUM_ASTEROID_RADIUS: f32 = 100.;
-const LARGE_ASTEROID_RADIUS: f32 = 125.;
+const SMALL_ASTEROID_RADIUS: f32 = 25.;
+const MEDIUM_ASTEROID_RADIUS: f32 = 50.;
+const LARGE_ASTEROID_RADIUS: f32 = 100.;
 
 const DEFAULT_VELOCITY_ASTEROID: Vec3 = Vec3::ZERO;
 
@@ -83,18 +83,22 @@ impl Asteroid {
 
         match self.side {
             Side::Top => {
-                let vel = Vec3::new(rng.random_range(-3.0..3.0), rng.random_range(-3.0..0.0), 0.);
+                let vel = Vec3::new(
+                    rng.random_range(-3.0..3.0),
+                    rng.random_range(-5.0..-2.0),
+                    0.,
+                );
                 (pos_y, vel)
             }
 
             Side::Bottom => {
-                let vel = Vec3::new(rng.random_range(-3.0..3.0), rng.random_range(3.0..6.0), 0.);
+                let vel = Vec3::new(rng.random_range(-3.0..3.0), rng.random_range(2.0..5.0), 0.);
 
                 (pos_y, vel)
             }
             Side::Right => {
                 let vel = Vec3::new(
-                    rng.random_range(-6.0..-3.0),
+                    rng.random_range(-5.0..-2.0),
                     rng.random_range(-3.0..3.0),
                     0.,
                 );
@@ -103,7 +107,7 @@ impl Asteroid {
             }
 
             Side::Left => {
-                let vel = Vec3::new(rng.random_range(3.0..6.0), rng.random_range(-6.0..3.0), 0.);
+                let vel = Vec3::new(rng.random_range(2.0..5.0), rng.random_range(-3.0..3.0), 0.);
 
                 (pos_x, vel)
             }

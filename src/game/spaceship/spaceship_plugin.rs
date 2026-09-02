@@ -1,5 +1,5 @@
 use avian2d::prelude::*;
-use bevy::{log::tracing::Instrument, prelude::*};
+use bevy::prelude::*;
 
 use crate::{GameState, game::game_plugin::GameSet};
 
@@ -17,7 +17,7 @@ impl Plugin for SpaceShipPlugin {
 // Image path of the space ship.
 const SPACE_SHIP_IMAGE_PATH: &str = "space_ship.png";
 // Defines the amount the space ship rotates per update.
-const SPACE_SHIP_ROTATION: f32 = 0.1;
+const SPACE_SHIP_ROTATION: f32 = 0.125;
 // Defines the width and height of the space_ship.
 const SPACE_SHIP_SIZE: [f32; 2] = [65., 75.];
 // Defines the 3 points used for space ship collider.
@@ -30,7 +30,7 @@ const BULLET_IMAGE_PATH: &str = "bullet.png";
 // Bullet offset from the space ship.
 const BULLET_OFFSET: Vec3 = Vec3::new(0., 75., 0.);
 // Defines the bullet speed.
-const BULLET_SPEED: f32 = 600.;
+const BULLET_SPEED: f32 = 1000.;
 // Defines the width and height of the bullet.
 const BULLET_SIZE: [f32; 2] = [15., 45.];
 
