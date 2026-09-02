@@ -1,5 +1,5 @@
 use crate::{
-    BORDER_COLOR,
+    BORDER_COLOR, FOCUS_BORDER_COLOR, FOCUS_TEXT_COLOR,
     GameState::{self, SplashScreen},
     TEXT_COLOR,
     core::game_fonts::game_fonts::GameFonts,
@@ -20,13 +20,20 @@ const FONT_SIZE_SPLASH_TITLE: i32 = 150;
 const START_BUTTON_FONT_SIZE: i32 = 30;
 
 const SPLASH_TITLE: &str = "ASTEROID";
+
 const START_BUTTON_TEXT: &str = "START";
+const SPLASH_START_BUTTON_SIZE: Vec2 = Vec2::new(200., 75.);
+const START_BUTTON_BORDER_RADIUS: i32 = 10;
+const START_BUTTON_BORDER_THICKNESS: f32 = 2.5;
 
 #[derive(Component)]
 struct SplashScreenComponent;
 
 #[derive(Component)]
 struct StartButton;
+
+#[derive(Component)]
+struct StartButtonText;
 
 // Spawns the splash screen.
 fn splash_screen(mut commands: Commands, assets_server: Res<AssetServer>) {
@@ -65,19 +72,19 @@ fn start_button(assets_server: &AssetServer) -> impl Bundle {
     (
         Button,
         Node {
-            width: px(200),
-            height: px(75.),
-            border: UiRect::all(px(2.5)),
-            border_radius: BorderRadius::all(px(10)),
+            width: px(SPLASH_START_BUTTON_SIZE.x),
+            height: px(SPLASH_START_BUTTON_SIZE.y),
+            border: UiRect::all(px(START_BUTTON_BORDER_THICKNESS)),
+            border_radius: BorderRadius::all(px(START_BUTTON_BORDER_RADIUS)),
             justify_content: JustifyContent::Center,
             align_items: AlignItems::Center,
-            padding: UiRect::all(Val::Px(1.0)),
             ..Default::default()
         },
         BorderColor::all(BORDER_COLOR),
         BackgroundColor(Color::BLACK),
         StartButton,
         children![(
+            StartButtonText,
             Text::new(START_BUTTON_TEXT),
             TextColor(TEXT_COLOR),
             TextFont {
@@ -94,17 +101,25 @@ fn start_button(assets_server: &AssetServer) -> impl Bundle {
 // Handles interactions with the start button
 fn button_interactions(
     mut game_state: ResMut<NextState<GameState>>,
-    interaction_query: Query<
-        (&mut Button, &Interaction),
+    start_button: Query<
+        (&mut Node, &Interaction, &mut BorderColor),
         (Changed<Interaction>, With<StartButton>),
     >,
+    mut start_button_text_color: Single<&mut TextColor, With<StartButtonText>>,
 ) {
-    for (button, interactions) in interaction_query {
+    for (mut button_node, interactions, mut border_color) in start_button {
         match *interactions {
             Interaction::Pressed => {
                 game_state.set(GameState::Game);
             }
-            _ => (),
+            Interaction::Hovered => {
+                start_button_text_color.0 = FOCUS_TEXT_COLOR;
+                *border_color = BorderColor::all(FOCUS_BORDER_COLOR);
+            }
+            Interaction::None => {
+                start_button_text_color.0 = TEXT_COLOR;
+                *border_color = BorderColor::all(BORDER_COLOR);
+            }
         }
     }
 }

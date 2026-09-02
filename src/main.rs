@@ -1,9 +1,7 @@
-#![allow(warnings)]
-use avian2d::{PhysicsPlugins, debug_render::PhysicsDebugPlugin};
+use avian2d::PhysicsPlugins;
 use bevy::prelude::*;
 
 use crate::{
-    GameState::Retry,
     core::{background::background_plugin::BackgroundPlugin, player::player_plugin::PlayerPlugin},
     game::game_plugin::GamePlugin,
     retry::retry_plugin::RetryPlugin,
@@ -16,8 +14,11 @@ mod retry;
 mod splashscreen;
 
 pub const BACKGROUND_COLOR: Color = Color::BLACK;
+
 pub const TEXT_COLOR: Color = Color::WHITE;
 pub const BORDER_COLOR: Color = Color::WHITE;
+pub const FOCUS_TEXT_COLOR: Color = Color::hsl(0., 0., 0.64);
+pub const FOCUS_BORDER_COLOR: Color = Color::hsl(0., 0., 0.64);
 
 #[derive(Default, States, Hash, Eq, Debug, PartialEq, Clone)]
 pub enum GameState {
