@@ -23,20 +23,37 @@ impl Plugin for RetryPlugin {
     }
 }
 
+// Font size for the "Score" title.
 const SCORE_TITLE_FONT_SIZE: f32 = 75.;
+
+// Font size for the player's final score.
 const FINAL_SCORE_FONT_SIZE: f32 = 100.;
+
+// Font size for the retry button text.
 const RETRY_BUTTON_TEXT_FONT_SIZE: f32 = 40.;
 
+// Width and height of the retry modal as a percentage of the screen.
 const MODAL_WINDOW_DIMENSIONS_PERCENT: Vec2 = Vec2::new(33., 70.);
+
+// Corner radius of the retry modal window.
 const MODAL_WINDOW_BORDER_RADIUS: f32 = 20.;
+
+// Border thickness of the retry modal window.
 const MODAL_WINDOW_BORDER_THICKNESS: f32 = 2.;
 
+// Text displayed above the final score.
 const SCORE_TITLE: &str = "Score";
 
+// Width and height of the retry button in pixels.
 const RETRY_BUTTON_DIMENSIONS: Vec2 = Vec2::new(200., 80.);
+
+// Corner radius of the retry button.
 const RETRY_BUTTON_BORDER_RADIUS: f32 = 20.;
+
+// Border thickness of the retry button.
 const RETRY_BUTTON_BORDER_THICKNESS: f32 = 2.5;
 
+// Text displayed inside the retry button.
 const RETRY_BUTTON_TEXT: &str = "retry";
 
 #[derive(Component)]

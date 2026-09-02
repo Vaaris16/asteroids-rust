@@ -16,14 +16,25 @@ impl Plugin for SplashScreenPlugin {
     }
 }
 
+// Font size of the splash screen title.
 const FONT_SIZE_SPLASH_TITLE: i32 = 150;
+
+// Font size of the start button text.
 const START_BUTTON_FONT_SIZE: i32 = 30;
 
+// Text displayed as the splash screen title.
 const SPLASH_TITLE: &str = "ASTEROID";
 
+// Text displayed inside the start button.
 const START_BUTTON_TEXT: &str = "START";
+
+// Width and height of the start button in pixels.
 const SPLASH_START_BUTTON_SIZE: Vec2 = Vec2::new(200., 75.);
+
+// Corner radius of the start button.
 const START_BUTTON_BORDER_RADIUS: i32 = 10;
+
+// Border thickness of the start button.
 const START_BUTTON_BORDER_THICKNESS: f32 = 2.5;
 
 #[derive(Component)]
