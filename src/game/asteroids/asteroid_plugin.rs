@@ -5,12 +5,13 @@ use rand::RngExt;
 use crate::{
     GameState,
     game::{
-        asteroids::asteroid_component::Asteroid, game_plugin::GameSet,
+        asteroids::{asteroid_component::Asteroid, asteroid_types::AsteroidType},
+        game_plugin::GameSet,
         spaceship::spaceship_plugin::Bullet,
     },
 };
 
-const MAX_ASTEROIDS: usize = 10;
+const MAX_ASTEROIDS: usize = 3;
 
 pub struct AsteroidPlugin;
 
@@ -31,13 +32,13 @@ impl Plugin for AsteroidPlugin {
 }
 
 // Spawns an asteroid.
-fn spawn_asteroid(
-    window_s: Single<&Window, With<PrimaryWindow>>,
-    mut commands: Commands,
-    assets_server: Res<AssetServer>,
+pub fn spawn_asteroid(
+    commands: &mut Commands,
+    assets_server: &AssetServer,
+    pos: Vec3,
+    vel: Vec3,
+    mut asteroid: Asteroid,
 ) {
-    let mut asteroid = Asteroid::new(window_s.width(), window_s.height());
-    let (pos, vel) = asteroid.rand_pos_vel();
     asteroid.velocity = vel;
 
     commands.spawn((
@@ -62,14 +63,18 @@ fn move_asteroid(asteroids: Query<(&mut Transform, &Asteroid), With<Asteroid>>) 
 
 // Maintains the number of asteroids.
 fn maintain_asteroids(
+    window_s: Single<&Window>,
     asteroids: Query<(), With<Asteroid>>,
-    window_s: Single<&Window, With<PrimaryWindow>>,
-    commands: Commands,
+    mut commands: Commands,
     assets_server: Res<AssetServer>,
 ) {
     let asteroid_count = asteroids.iter().count();
+
+    let asteroid_type = AsteroidType::rand_asteroid_type();
+    let asteroid = Asteroid::new(window_s.width(), window_s.height(), asteroid_type);
+    let (pos, vel) = asteroid.rand_pos_vel();
     if asteroid_count <= MAX_ASTEROIDS {
-        spawn_asteroid(window_s, commands, assets_server);
+        spawn_asteroid(&mut commands, &assets_server, pos, vel, asteroid);
     }
 }
 

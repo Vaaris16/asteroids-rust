@@ -2,8 +2,7 @@ use avian2d::prelude::*;
 use bevy::prelude::*;
 
 use crate::game::{
-    asteroids::{asteroid_component::Asteroid, asteroid_plugin::spawn_asteroid},
-    score::score_plugin::Score,
+    asteroids::asteroid_component::Asteroid, score::score_plugin::Score,
     spaceship::spaceship_plugin::Bullet,
 };
 
@@ -13,9 +12,7 @@ pub fn check_collision_asteroid_with_bullet(
     bullets: Query<(), With<Bullet>>,
     asteroids: Query<(&Transform, &Asteroid), With<Asteroid>>,
     mut commands: Commands,
-    assets_server: Res<AssetServer>,
     mut score: ResMut<Score>,
-    window_s: Single<&Window>,
 ) {
     for event in events.read() {
         let entity1 = event.collider1;
@@ -30,27 +27,9 @@ pub fn check_collision_asteroid_with_bullet(
                 continue;
             };
 
-        let Ok((old_asteroid_transform, old_asteroid)) = asteroids.get(asteroid_entity) else {
+        let Ok((transform, asteroid)) = asteroids.get(asteroid_entity) else {
             continue;
         };
-
-        if let Some(smaller_asteroid_type) = old_asteroid.asteroid_type.next_asteroid_type() {
-            for _ in 0..2 {
-                let new_asteroid = Asteroid::new(
-                    window_s.width(),
-                    window_s.height(),
-                    smaller_asteroid_type.clone(),
-                );
-
-                spawn_asteroid(
-                    &mut commands,
-                    &assets_server,
-                    old_asteroid_transform.translation,
-                    Vec3::new(-1., 1., 0.),
-                    new_asteroid,
-                );
-            }
-        }
 
         commands.entity(bullet_entity).despawn();
         commands.entity(asteroid_entity).despawn();

@@ -30,8 +30,7 @@ pub struct Asteroid {
 
 impl Asteroid {
     // Used to spawn a new Asteroid Component
-    pub fn new(window_x: f32, window_y: f32) -> Self {
-        let asteroid_type = AsteroidType::rand_asteroid_type();
+    pub fn new(window_x: f32, window_y: f32, asteroid_type: AsteroidType) -> Self {
         let collider_radius = Self::get_collider_radius(&asteroid_type);
         Self {
             velocity: DEFAULT_VELOCITY_ASTEROID,
