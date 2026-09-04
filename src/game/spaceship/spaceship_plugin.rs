@@ -17,7 +17,7 @@ impl Plugin for SpaceShipPlugin {
 // Image path of the space ship.
 const SPACE_SHIP_IMAGE_PATH: &str = "space_ship.png";
 // Defines the amount the space ship rotates per update.
-const SPACE_SHIP_ROTATION: f32 = 0.125;
+const SPACE_SHIP_ROTATION: f32 = 0.05;
 // Defines the width and height of the space_ship.
 const SPACE_SHIP_SIZE: [f32; 2] = [65., 75.];
 // Defines the 3 points used for space ship collider.
