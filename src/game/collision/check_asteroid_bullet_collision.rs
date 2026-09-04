@@ -1,5 +1,5 @@
 use avian2d::prelude::*;
-use bevy::prelude::*;
+use bevy::{platform::collections::HashSet, prelude::*};
 
 use crate::game::{
     asteroids::{asteroid_component::Asteroid, asteroid_plugin::spawn_asteroid},
@@ -17,6 +17,7 @@ pub fn check_collision_asteroid_with_bullet(
     mut score: ResMut<Score>,
     window_s: Single<&Window>,
 ) {
+    let mut processed_asteroid: HashSet<Entity> = HashSet::new();
     for event in events.read() {
         let entity1 = event.collider1;
         let entity2 = event.collider2;
@@ -30,6 +31,10 @@ pub fn check_collision_asteroid_with_bullet(
                 continue;
             };
 
+        if !processed_asteroid.insert(asteroid_entity) {
+            continue;
+        }
+
         let Ok((old_asteroid_transform, old_asteroid)) = asteroids.get(asteroid_entity) else {
             continue;
         };
@@ -41,12 +46,13 @@ pub fn check_collision_asteroid_with_bullet(
                     window_s.height(),
                     smaller_asteroid_type.clone(),
                 );
+                let vel = Asteroid::rand_vel();
 
                 spawn_asteroid(
                     &mut commands,
                     &assets_server,
                     old_asteroid_transform.translation,
-                    Vec3::new(-1., 1., 0.),
+                    vel,
                     new_asteroid,
                 );
             }

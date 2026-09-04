@@ -11,7 +11,7 @@ use crate::{
     },
 };
 
-const MAX_ASTEROIDS: usize = 3;
+const MAX_ASTEROIDS: usize = 2;
 
 pub struct AsteroidPlugin;
 
@@ -71,7 +71,11 @@ fn maintain_asteroids(
     let asteroid_count = asteroids.iter().count();
 
     let asteroid_type = AsteroidType::rand_asteroid_type();
-    let asteroid = Asteroid::new(window_s.width(), window_s.height(), asteroid_type);
+    let asteroid = Asteroid::new(
+        window_s.width(),
+        window_s.height(),
+        AsteroidType::AsteroidLarge,
+    );
     let (pos, vel) = asteroid.rand_pos_vel();
     if asteroid_count <= MAX_ASTEROIDS {
         spawn_asteroid(&mut commands, &assets_server, pos, vel, asteroid);
