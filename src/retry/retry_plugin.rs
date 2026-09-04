@@ -1,10 +1,10 @@
-use bevy::{log::tracing_subscriber::fmt::format, prelude::*};
+use bevy::prelude::*;
 
 use crate::{
     BORDER_COLOR, FOCUS_BORDER_COLOR, FOCUS_TEXT_COLOR,
-    GameState::{self, Game},
+    GameState::{self},
     TEXT_COLOR,
-    core::game_fonts::game_fonts::GameFonts,
+    core::game_fonts::fonts::GameFonts,
     game::score::score_plugin::Score,
 };
 
@@ -98,7 +98,7 @@ fn modal_window(assets_server: &AssetServer, score: Res<Score>) -> impl Bundle {
         children![
             score_title(assets_server),
             final_score(score),
-            retry_button(&assets_server)
+            retry_button(assets_server)
         ],
     )
 }

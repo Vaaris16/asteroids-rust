@@ -2,7 +2,7 @@ use crate::{
     BORDER_COLOR, FOCUS_BORDER_COLOR, FOCUS_TEXT_COLOR,
     GameState::{self},
     TEXT_COLOR,
-    core::game_fonts::game_fonts::GameFonts,
+    core::game_fonts::fonts::GameFonts,
 };
 use bevy::prelude::*;
 

@@ -1,7 +1,7 @@
-use bevy::{core_pipeline::oit::resolve::node, prelude::*};
+use bevy::prelude::*;
 
 use crate::{
-    GameState, TEXT_COLOR, core::game_fonts::game_fonts::GameFonts, game::game_plugin::GameSet,
+    GameState, TEXT_COLOR, core::game_fonts::fonts::GameFonts, game::game_plugin::GameSet,
 };
 
 pub struct ScorePlugin;
@@ -37,14 +37,12 @@ impl Score {
 
 fn spawn_score(mut commands: Commands, score: Res<Score>, assets_server: Res<AssetServer>) {
     commands
-        .spawn(
-            (Node {
-                width: percent(100),
-                height: percent(100),
-                justify_content: JustifyContent::Center,
-                ..Default::default()
-            }),
-        )
+        .spawn(Node {
+            width: percent(100),
+            height: percent(100),
+            justify_content: JustifyContent::Center,
+            ..Default::default()
+        })
         .with_children(|score_parent| {
             score_parent.spawn((
                 Text::new(score.score.to_string()),

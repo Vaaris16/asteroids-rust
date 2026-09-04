@@ -1,1 +1,1 @@
-pub mod game_fonts;
+pub mod fonts;

@@ -55,8 +55,7 @@ impl Asteroid {
     // Returns random velocity.
     pub fn rand_vel() -> Vec3 {
         let mut rng = rand::rng();
-        let vel = Vec3::new(rng.random_range(-3.0..3.0), rng.random_range(-5.0..5.0), 0.);
-        vel
+        Vec3::new(rng.random_range(-3.0..3.0), rng.random_range(-5.0..5.0), 0.)
     }
     // Returns the collider_radius based on the AsteroidType.
     fn get_collider_radius(asteroid_type: &AsteroidType) -> f32 {

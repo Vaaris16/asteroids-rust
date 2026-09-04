@@ -1,13 +1,11 @@
 use avian2d::prelude::*;
-use bevy::{log::tracing::instrument, prelude::*, window::PrimaryWindow};
-use rand::RngExt;
+use bevy::{prelude::*, window::PrimaryWindow};
 
 use crate::{
     GameState,
     game::{
         asteroids::{asteroid_component::Asteroid, asteroid_types::AsteroidType},
         game_plugin::GameSet,
-        spaceship::spaceship_plugin::Bullet,
     },
 };
 
@@ -71,11 +69,7 @@ fn maintain_asteroids(
     let asteroid_count = asteroids.iter().count();
 
     let asteroid_type = AsteroidType::rand_asteroid_type();
-    let asteroid = Asteroid::new(
-        window_s.width(),
-        window_s.height(),
-        AsteroidType::AsteroidLarge,
-    );
+    let asteroid = Asteroid::new(window_s.width(), window_s.height(), asteroid_type);
     let (pos, vel) = asteroid.rand_pos_vel();
     if asteroid_count <= MAX_ASTEROIDS {
         spawn_asteroid(&mut commands, &assets_server, pos, vel, asteroid);

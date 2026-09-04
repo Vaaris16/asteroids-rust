@@ -9,5 +9,5 @@ impl Plugin for PlayerPlugin {
 }
 
 fn spawn_player(mut commands: Commands) {
-    commands.spawn((Camera2d::default(), Transform::default()));
+    commands.spawn((Camera2d, Transform::default()));
 }
