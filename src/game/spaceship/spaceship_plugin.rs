@@ -15,7 +15,7 @@ impl Plugin for SpaceShipPlugin {
 }
 
 // Image path of the space ship.
-const SPACE_SHIP_IMAGE_PATH: &str = "space_ship.png";
+pub const SPACE_SHIP_IMAGE_PATH: &str = "space_ship.png";
 // Defines the amount the space ship rotates per update.
 const SPACE_SHIP_ROTATION: f32 = 0.05;
 // Defines the width and height of the space_ship.
@@ -32,7 +32,7 @@ const BULLET_OFFSET: Vec3 = Vec3::new(0., 75., 0.);
 // Defines the bullet speed.
 const BULLET_SPEED: f32 = 1000.;
 // Defines the width and height of the bullet.
-const BULLET_SIZE: [f32; 2] = [15., 45.];
+const BULLET_RADIUS: f32 = 5.;
 
 #[derive(Component)]
 pub struct SpaceShip;
@@ -88,7 +88,7 @@ fn spawn_bullet(
             ..Default::default()
         },
         Bullet,
-        Collider::rectangle(BULLET_SIZE[0], BULLET_SIZE[1]),
+        Collider::circle(BULLET_RADIUS),
         CollisionEventsEnabled,
         RigidBody::Kinematic,
         LinearVelocity(((space_ship.rotation * Vec3::Y) * BULLET_SPEED).truncate()),

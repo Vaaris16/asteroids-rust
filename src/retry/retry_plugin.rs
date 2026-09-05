@@ -5,7 +5,7 @@ use crate::{
     GameState::{self},
     TEXT_COLOR,
     core::game_fonts::fonts::GameFonts,
-    game::score::score_plugin::Score,
+    game::ui::score::score_plugin::Score,
 };
 
 pub struct RetryPlugin;

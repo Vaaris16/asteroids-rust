@@ -1,4 +1,4 @@
-use avian2d::PhysicsPlugins;
+use avian2d::{PhysicsPlugins, debug_render::PhysicsDebugPlugin};
 use bevy::prelude::*;
 
 use crate::{

@@ -4,7 +4,7 @@ use crate::{
     GameState,
     game::{
         asteroids::asteroid_plugin::AsteroidPlugin, collision::collision_plugin::CollisionPlugin,
-        score::score_plugin::ScorePlugin, spaceship::spaceship_plugin::SpaceShipPlugin,
+        spaceship::spaceship_plugin::SpaceShipPlugin, ui::ui_plugin::UiPlugin,
     },
 };
 
@@ -16,11 +16,6 @@ pub struct GameSet;
 impl Plugin for GamePlugin {
     fn build(&self, app: &mut App) {
         app.configure_sets(Update, GameSet.run_if(in_state(GameState::Game)));
-        app.add_plugins((
-            AsteroidPlugin,
-            SpaceShipPlugin,
-            CollisionPlugin,
-            ScorePlugin,
-        ));
+        app.add_plugins((AsteroidPlugin, SpaceShipPlugin, CollisionPlugin, UiPlugin));
     }
 }

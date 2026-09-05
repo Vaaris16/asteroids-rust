@@ -9,7 +9,7 @@ use crate::{
     },
 };
 
-const MAX_ASTEROIDS: usize = 2;
+const MAX_ASTEROIDS: usize = 10;
 
 pub struct AsteroidPlugin;
 

@@ -3,8 +3,8 @@ use bevy::{platform::collections::HashSet, prelude::*};
 
 use crate::game::{
     asteroids::{asteroid_component::Asteroid, asteroid_plugin::spawn_asteroid},
-    score::score_plugin::Score,
     spaceship::spaceship_plugin::Bullet,
+    ui::score::score_plugin::Score,
 };
 
 // Checks if a bullet and asteroid collided, despawns both, and updates the score.
