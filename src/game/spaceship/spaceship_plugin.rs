@@ -5,8 +5,23 @@ use crate::{GameState, game::game_plugin::GameSet};
 
 pub struct SpaceShipPlugin;
 
+#[derive(Resource, Deref)]
+struct ShootSound {
+    shoot_sound_handle: Handle<AudioSource>,
+}
+
+impl FromWorld for ShootSound {
+    fn from_world(world: &mut World) -> Self {
+        let assets_server = world.resource::<AssetServer>();
+        ShootSound {
+            shoot_sound_handle: assets_server.load("sounds/shoot_sound.wav"),
+        }
+    }
+}
+
 impl Plugin for SpaceShipPlugin {
     fn build(&self, app: &mut App) {
+        app.init_resource::<ShootSound>();
         app.add_systems(OnEnter(GameState::Game), spawn_space_ship)
             .add_systems(Update, space_ship_controls.in_set(GameSet))
             .add_systems(Update, out_of_bounds_bullets.in_set(GameSet))
@@ -61,6 +76,7 @@ fn space_ship_controls(
     key_pressed: Res<ButtonInput<KeyCode>>,
     mut commands: Commands,
     assets_server: Res<AssetServer>,
+    shoot_sound: Res<ShootSound>,
 ) {
     for key in key_pressed.get_pressed() {
         match key {
@@ -71,6 +87,10 @@ fn space_ship_controls(
 
         if key_pressed.just_pressed(KeyCode::Space) {
             spawn_bullet(&space_ship, &mut commands, &assets_server);
+            commands.spawn((
+                AudioPlayer::new(shoot_sound.clone()),
+                PlaybackSettings::DESPAWN,
+            ));
         }
     }
 }

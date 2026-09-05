@@ -5,5 +5,5 @@ edition = "2024"
 
 [dependencies]
 avian2d = "0.7.0"
-bevy = {version = "0.19.1", features=["debug"]}
+bevy = {version = "0.19.1", features=["debug", "wav"]}
 rand = "0.10.2"
