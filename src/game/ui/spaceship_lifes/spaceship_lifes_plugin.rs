@@ -45,8 +45,6 @@ pub fn decrement_lifes(
             commands.entity(indicator_entity).despawn();
         }
     }
-
-    println!("{}", lifes.remaining_lifes);
 }
 
 fn spaceship_lifes(mut commands: Commands, assets_server: Res<AssetServer>) {

@@ -1,10 +1,8 @@
-use avian2d::{PhysicsPlugins, debug_render::PhysicsDebugPlugin};
+use avian2d::PhysicsPlugins;
 use bevy::prelude::*;
 
 use crate::{
-    core::{background::background_plugin::BackgroundPlugin, player::player_plugin::PlayerPlugin},
-    game::game_plugin::GamePlugin,
-    retry::retry_plugin::RetryPlugin,
+    core::core_plugin::CorePlugin, game::game_plugin::GamePlugin, retry::retry_plugin::RetryPlugin,
     splashscreen::splash_screen_plugin::SplashScreenPlugin,
 };
 
@@ -39,8 +37,7 @@ fn main() {
                 ..Default::default()
             }),
             PhysicsPlugins::default(),
-            BackgroundPlugin,
-            PlayerPlugin,
+            CorePlugin,
             GamePlugin,
             SplashScreenPlugin,
             RetryPlugin,

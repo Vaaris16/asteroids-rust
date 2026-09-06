@@ -1,11 +1,25 @@
 use avian2d::prelude::*;
-use bevy::{platform::collections::HashSet, prelude::*};
+use bevy::{audio::Volume, platform::collections::HashSet, prelude::*};
 
 use crate::game::{
     asteroids::{asteroid_component::Asteroid, asteroid_plugin::spawn_asteroid},
     spaceship::spaceship_plugin::Bullet,
     ui::score::score_plugin::Score,
 };
+
+#[derive(Resource, Deref)]
+pub struct ExplosionMusic {
+    explosion_handle: Handle<AudioSource>,
+}
+
+impl FromWorld for ExplosionMusic {
+    fn from_world(world: &mut World) -> Self {
+        let assets_server = world.resource::<AssetServer>();
+        ExplosionMusic {
+            explosion_handle: assets_server.load("sounds/explosion.wav"),
+        }
+    }
+}
 
 // Checks if a bullet and asteroid collided, despawns both, and updates the score.
 pub fn check_collision_asteroid_with_bullet(
@@ -16,6 +30,7 @@ pub fn check_collision_asteroid_with_bullet(
     assets_server: Res<AssetServer>,
     mut score: ResMut<Score>,
     window_s: Single<&Window>,
+    music: Res<ExplosionMusic>,
 ) {
     let mut processed_asteroid: HashSet<Entity> = HashSet::new();
     for event in events.read() {
@@ -30,6 +45,11 @@ pub fn check_collision_asteroid_with_bullet(
             } else {
                 continue;
             };
+
+        commands.spawn((
+            AudioPlayer::new(music.explosion_handle.clone()),
+            PlaybackSettings::DESPAWN.with_volume(Volume::Linear(0.8)),
+        ));
 
         if !processed_asteroid.insert(asteroid_entity) {
             continue;
