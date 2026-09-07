@@ -1,5 +1,5 @@
 use crate::{
-    BORDER_COLOR, FOCUS_BORDER_COLOR, FOCUS_TEXT_COLOR,
+    BORDER_COLOR,
     GameState::{self},
     TEXT_COLOR,
     core::game_fonts::fonts::GameFonts,
@@ -17,10 +17,10 @@ impl Plugin for SplashScreenPlugin {
 }
 
 // Font size of the splash screen title.
-const FONT_SIZE_SPLASH_TITLE: i32 = 150;
+const FONT_SIZE_SPLASH_TITLE: i32 = 120;
 
 // Font size of the start button text.
-const START_BUTTON_FONT_SIZE: i32 = 30;
+const START_BUTTON_FONT_SIZE: i32 = 20;
 
 // Text displayed as the splash screen title.
 const SPLASH_TITLE: &str = "ASTEROID";
@@ -29,10 +29,7 @@ const SPLASH_TITLE: &str = "ASTEROID";
 const START_BUTTON_TEXT: &str = "START";
 
 // Width and height of the start button in pixels.
-const SPLASH_START_BUTTON_SIZE: Vec2 = Vec2::new(200., 75.);
-
-// Corner radius of the start button.
-const START_BUTTON_BORDER_RADIUS: i32 = 10;
+const SPLASH_START_BUTTON_SIZE: Vec2 = Vec2::new(250., 60.);
 
 // Border thickness of the start button.
 const START_BUTTON_BORDER_THICKNESS: f32 = 2.5;
@@ -55,7 +52,7 @@ fn splash_screen(mut commands: Commands, assets_server: Res<AssetServer>) {
             justify_content: JustifyContent::Center,
             align_items: AlignItems::Center,
             flex_direction: FlexDirection::Column,
-            column_gap: px(35),
+            row_gap: px(50),
             ..Default::default()
         },
         SplashScreenComponent,
@@ -70,7 +67,7 @@ fn splash_title(assets_server: &AssetServer) -> impl Bundle {
         TextFont {
             font_size: px(FONT_SIZE_SPLASH_TITLE).into(),
             font: assets_server
-                .load(GameFonts::ComfortaaBold.font_path())
+                .load(GameFonts::PressStart2P.font_path())
                 .into(),
             ..Default::default()
         },
@@ -86,7 +83,6 @@ fn start_button(assets_server: &AssetServer) -> impl Bundle {
             width: px(SPLASH_START_BUTTON_SIZE.x),
             height: px(SPLASH_START_BUTTON_SIZE.y),
             border: UiRect::all(px(START_BUTTON_BORDER_THICKNESS)),
-            border_radius: BorderRadius::all(px(START_BUTTON_BORDER_RADIUS)),
             justify_content: JustifyContent::Center,
             align_items: AlignItems::Center,
             ..Default::default()
@@ -100,7 +96,7 @@ fn start_button(assets_server: &AssetServer) -> impl Bundle {
             TextColor(TEXT_COLOR),
             TextFont {
                 font: assets_server
-                    .load(GameFonts::ComfortaaMedium.font_path())
+                    .load(GameFonts::PressStart2P.font_path())
                     .into(),
                 font_size: px(START_BUTTON_FONT_SIZE).into(),
                 ..Default::default()
@@ -113,23 +109,23 @@ fn start_button(assets_server: &AssetServer) -> impl Bundle {
 fn button_interactions(
     mut game_state: ResMut<NextState<GameState>>,
     start_button: Query<
-        (&Interaction, &mut BorderColor),
+        (&Interaction, &mut BackgroundColor),
         (Changed<Interaction>, With<StartButton>),
     >,
     mut start_button_text_color: Single<&mut TextColor, With<StartButtonText>>,
 ) {
-    for (interactions, mut border_color) in start_button {
+    for (interactions, mut background_color) in start_button {
         match *interactions {
             Interaction::Pressed => {
                 game_state.set(GameState::Game);
             }
             Interaction::Hovered => {
-                start_button_text_color.0 = FOCUS_TEXT_COLOR;
-                *border_color = BorderColor::all(FOCUS_BORDER_COLOR);
+                background_color.0 = Color::WHITE;
+                start_button_text_color.0 = Color::BLACK;
             }
             Interaction::None => {
-                start_button_text_color.0 = TEXT_COLOR;
-                *border_color = BorderColor::all(BORDER_COLOR);
+                background_color.0 = Color::BLACK;
+                start_button_text_color.0 = Color::WHITE;
             }
         }
     }
