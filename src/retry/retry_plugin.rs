@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 
 use crate::{
-    BORDER_COLOR, FOCUS_BORDER_COLOR, FOCUS_TEXT_COLOR,
+    BORDER_COLOR,
     GameState::{self},
     TEXT_COLOR,
     core::game_fonts::fonts::GameFonts,
@@ -23,20 +23,20 @@ impl Plugin for RetryPlugin {
     }
 }
 
+// Game over text.
+const GAME_OVER_TEXT: &str = "Game Over";
+
 // Font size for the "Score" title.
-const SCORE_TITLE_FONT_SIZE: f32 = 75.;
+const SCORE_TITLE_FONT_SIZE: f32 = 30.;
 
 // Font size for the player's final score.
-const FINAL_SCORE_FONT_SIZE: f32 = 100.;
+const FINAL_SCORE_FONT_SIZE: f32 = 50.;
 
 // Font size for the retry button text.
-const RETRY_BUTTON_TEXT_FONT_SIZE: f32 = 40.;
+const RETRY_BUTTON_TEXT_FONT_SIZE: f32 = 25.;
 
 // Width and height of the retry modal as a percentage of the screen.
-const MODAL_WINDOW_DIMENSIONS_PERCENT: Vec2 = Vec2::new(33., 70.);
-
-// Corner radius of the retry modal window.
-const MODAL_WINDOW_BORDER_RADIUS: f32 = 20.;
+const MODAL_WINDOW_WIDTH: f32 = 33.;
 
 // Border thickness of the retry modal window.
 const MODAL_WINDOW_BORDER_THICKNESS: f32 = 2.;
@@ -45,10 +45,7 @@ const MODAL_WINDOW_BORDER_THICKNESS: f32 = 2.;
 const SCORE_TITLE: &str = "Score";
 
 // Width and height of the retry button in pixels.
-const RETRY_BUTTON_DIMENSIONS: Vec2 = Vec2::new(200., 80.);
-
-// Corner radius of the retry button.
-const RETRY_BUTTON_BORDER_RADIUS: f32 = 20.;
+const RETRY_BUTTON_DIMENSIONS: Vec2 = Vec2::new(200., 70.);
 
 // Border thickness of the retry button.
 const RETRY_BUTTON_BORDER_THICKNESS: f32 = 2.5;
@@ -84,33 +81,49 @@ fn retry_window(mut commands: Commands, assets_server: Res<AssetServer>, score: 
 fn modal_window(assets_server: &AssetServer, score: Res<Score>) -> impl Bundle {
     (
         Node {
-            width: percent(MODAL_WINDOW_DIMENSIONS_PERCENT.x),
-            height: percent(MODAL_WINDOW_DIMENSIONS_PERCENT.y),
+            width: percent(MODAL_WINDOW_WIDTH),
             align_items: AlignItems::Center,
             flex_direction: FlexDirection::Column,
             border: UiRect::all(px(MODAL_WINDOW_BORDER_THICKNESS)),
-            border_radius: BorderRadius::all(px(MODAL_WINDOW_BORDER_RADIUS)),
             padding: UiRect::all(px(50)),
             ..Default::default()
         },
         BorderColor::all(BORDER_COLOR),
         BackgroundColor(Color::BLACK),
         children![
+            game_over_text(assets_server),
             score_title(assets_server),
-            final_score(score),
+            final_score(score, assets_server),
             retry_button(assets_server)
         ],
+    )
+}
+
+fn game_over_text(assets_server: &AssetServer) -> impl Bundle {
+    (
+        Text::new(GAME_OVER_TEXT),
+        TextFont {
+            font: assets_server
+                .load(GameFonts::PressStart2P.font_path())
+                .into(),
+            font_size: px(35).into(),
+            ..Default::default()
+        },
     )
 }
 
 // Spawns the score title.
 fn score_title(assets_server: &AssetServer) -> impl Bundle {
     (
+        Node {
+            margin: UiRect::top(px(30)),
+            ..Default::default()
+        },
         Text::new(SCORE_TITLE),
         TextFont {
             font_size: px(SCORE_TITLE_FONT_SIZE).into(),
             font: assets_server
-                .load(GameFonts::ComfortaaBold.font_path())
+                .load(GameFonts::PressStart2P.font_path())
                 .into(),
             ..Default::default()
         },
@@ -119,15 +132,18 @@ fn score_title(assets_server: &AssetServer) -> impl Bundle {
 }
 
 // Displays the final score.
-fn final_score(score: Res<Score>) -> impl Bundle {
+fn final_score(score: Res<Score>, assets_server: &AssetServer) -> impl Bundle {
     (
         Node {
-            margin: UiRect::top(px(40)),
+            margin: UiRect::top(px(20)),
             ..Default::default()
         },
         Text::new(score.score.to_string()),
         TextColor(TEXT_COLOR),
         TextFont {
+            font: assets_server
+                .load(GameFonts::PressStart2P.font_path())
+                .into(),
             font_size: px(FINAL_SCORE_FONT_SIZE).into(),
             ..Default::default()
         },
@@ -141,7 +157,6 @@ fn retry_button(assets_server: &AssetServer) -> impl Bundle {
         Node {
             width: px(RETRY_BUTTON_DIMENSIONS.x),
             height: px(RETRY_BUTTON_DIMENSIONS.y),
-            border_radius: BorderRadius::all(px(RETRY_BUTTON_BORDER_RADIUS)),
             margin: UiRect::top(px(50)),
             border: UiRect::all(px(RETRY_BUTTON_BORDER_THICKNESS)),
             justify_content: JustifyContent::Center,
@@ -157,7 +172,7 @@ fn retry_button(assets_server: &AssetServer) -> impl Bundle {
             TextFont {
                 font_size: px(RETRY_BUTTON_TEXT_FONT_SIZE).into(),
                 font: assets_server
-                    .load(GameFonts::ComfortaaBold.font_path())
+                    .load(GameFonts::PressStart2P.font_path())
                     .into(),
                 ..Default::default()
             },
@@ -170,23 +185,23 @@ fn retry_button(assets_server: &AssetServer) -> impl Bundle {
 fn retry_button_interactions(
     mut game_state: ResMut<NextState<GameState>>,
     retry_button: Query<
-        (&Interaction, &mut BorderColor),
+        (&Interaction, &mut BackgroundColor),
         (With<RetryButton>, Changed<Interaction>),
     >,
     mut retry_button_text: Single<&mut TextColor, With<RetryButtonText>>,
 ) {
-    for (interaction, mut border_color) in retry_button {
+    for (interaction, mut bg_color) in retry_button {
         match *interaction {
             Interaction::Pressed => {
                 game_state.set(GameState::SplashScreen);
             }
             Interaction::Hovered => {
-                retry_button_text.0 = FOCUS_TEXT_COLOR;
-                *border_color = BorderColor::all(FOCUS_BORDER_COLOR);
+                retry_button_text.0 = Color::BLACK;
+                bg_color.0 = Color::WHITE;
             }
             Interaction::None => {
-                retry_button_text.0 = TEXT_COLOR;
-                *border_color = BorderColor::all(BORDER_COLOR);
+                retry_button_text.0 = Color::WHITE;
+                bg_color.0 = Color::BLACK;
             }
         }
     }
