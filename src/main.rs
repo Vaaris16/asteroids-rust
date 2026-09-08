@@ -18,9 +18,9 @@ pub const BORDER_COLOR: Color = Color::WHITE;
 
 #[derive(Default, States, Hash, Eq, Debug, PartialEq, Clone)]
 pub enum GameState {
+    #[default]
     SplashScreen,
     Game,
-    #[default]
     Retry,
 }
 

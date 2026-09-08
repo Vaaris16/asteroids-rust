@@ -16,7 +16,7 @@ impl Plugin for ScorePlugin {
 }
 
 const SCORE_STEP: i32 = 5;
-const SCORE_TEXT_SIZE: f32 = 100.;
+const SCORE_TEXT_SIZE: f32 = 80.;
 
 // Component used to identitfy the score text.
 #[derive(Component)]
@@ -49,7 +49,7 @@ fn spawn_score(mut commands: Commands, score: Res<Score>, assets_server: Res<Ass
                 TextFont {
                     font_size: px(SCORE_TEXT_SIZE).into(),
                     font: assets_server
-                        .load(GameFonts::ComfortaaBold.font_path())
+                        .load(GameFonts::PressStart2P.font_path())
                         .into(),
                     ..Default::default()
                 },
