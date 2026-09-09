@@ -12,6 +12,9 @@ use crate::{
     },
 };
 
+// Defines the lost life sound effect's path.
+const LOSE_LIFE_SOUND_PATH: &str = "sounds/lose_life_sound_effect.wav";
+
 #[derive(Resource, Deref)]
 pub struct LifeLostSoundEffect {
     life_lost_sound_effect_handle: Handle<AudioSource>,
@@ -21,7 +24,7 @@ impl FromWorld for LifeLostSoundEffect {
     fn from_world(world: &mut World) -> Self {
         let assets_server = world.resource::<AssetServer>();
         LifeLostSoundEffect {
-            life_lost_sound_effect_handle: assets_server.load("sounds/lose_life_sound_effect.wav"),
+            life_lost_sound_effect_handle: assets_server.load(LOSE_LIFE_SOUND_PATH),
         }
     }
 }

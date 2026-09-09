@@ -28,6 +28,11 @@ impl Plugin for SpaceShipPlugin {
             .add_systems(OnExit(GameState::Game), cleanup_spaceship);
     }
 }
+#[derive(Component)]
+pub struct SpaceShip;
+
+#[derive(Component)]
+pub struct Bullet;
 
 // Image path of the space ship.
 pub const SPACE_SHIP_IMAGE_PATH: &str = "space_ship.png";
@@ -39,21 +44,6 @@ const SPACE_SHIP_SIZE: [f32; 2] = [65., 75.];
 const SPACE_SHIP_POINT_A: Vec2 = Vec2::new(-SPACE_SHIP_SIZE[0] / 2., -SPACE_SHIP_SIZE[1] / 2.);
 const SPACE_SHIP_POINT_B: Vec2 = Vec2::new(SPACE_SHIP_SIZE[0] / 2., -SPACE_SHIP_SIZE[1] / 2.);
 const SPACE_SHIP_POINT_C: Vec2 = Vec2::new(0., SPACE_SHIP_SIZE[1] / 2.);
-
-// Image path of the bullet.
-const BULLET_IMAGE_PATH: &str = "bullet.png";
-// Bullet offset from the space ship.
-const BULLET_OFFSET: Vec3 = Vec3::new(0., 75., 0.);
-// Defines the bullet speed.
-const BULLET_SPEED: f32 = 1000.;
-// Defines the width and height of the bullet.
-const BULLET_RADIUS: f32 = 5.;
-
-#[derive(Component)]
-pub struct SpaceShip;
-
-#[derive(Component)]
-pub struct Bullet;
 
 // Spawns the space ship.
 fn spawn_space_ship(mut commands: Commands, assets_server: Res<AssetServer>) {
@@ -69,6 +59,15 @@ fn spawn_space_ship(mut commands: Commands, assets_server: Res<AssetServer>) {
         Transform::default(),
     ));
 }
+
+// Image path of the bullet.
+const BULLET_IMAGE_PATH: &str = "bullet.png";
+// Bullet offset from the space ship.
+const BULLET_OFFSET: Vec3 = Vec3::new(0., 75., 0.);
+// Defines the bullet speed.
+const BULLET_SPEED: f32 = 1000.;
+// Defines the width and height of the bullet.
+const BULLET_RADIUS: f32 = 5.;
 
 // Defines controls for the space ship.
 fn space_ship_controls(

@@ -23,36 +23,6 @@ impl Plugin for RetryPlugin {
     }
 }
 
-// Game over text.
-const GAME_OVER_TEXT: &str = "Game Over";
-
-// Font size for the "Score" title.
-const SCORE_TITLE_FONT_SIZE: f32 = 30.;
-
-// Font size for the player's final score.
-const FINAL_SCORE_FONT_SIZE: f32 = 50.;
-
-// Font size for the retry button text.
-const RETRY_BUTTON_TEXT_FONT_SIZE: f32 = 25.;
-
-// Width and height of the retry modal as a percentage of the screen.
-const MODAL_WINDOW_WIDTH: f32 = 33.;
-
-// Border thickness of the retry modal window.
-const MODAL_WINDOW_BORDER_THICKNESS: f32 = 2.;
-
-// Text displayed above the final score.
-const SCORE_TITLE: &str = "Score";
-
-// Width and height of the retry button in pixels.
-const RETRY_BUTTON_DIMENSIONS: Vec2 = Vec2::new(200., 70.);
-
-// Border thickness of the retry button.
-const RETRY_BUTTON_BORDER_THICKNESS: f32 = 2.5;
-
-// Text displayed inside the retry button.
-const RETRY_BUTTON_TEXT: &str = "retry";
-
 #[derive(Component)]
 struct RetryPage;
 
@@ -76,6 +46,11 @@ fn retry_window(mut commands: Commands, assets_server: Res<AssetServer>, score: 
         children![modal_window(&assets_server, score)],
     ));
 }
+
+// Width and height of the retry modal as a percentage of the screen.
+const MODAL_WINDOW_WIDTH: f32 = 33.;
+// Border thickness of the retry modal window.
+const MODAL_WINDOW_BORDER_THICKNESS: f32 = 2.;
 
 // Spawns the retry modal window.
 fn modal_window(assets_server: &AssetServer, score: Res<Score>) -> impl Bundle {
@@ -101,7 +76,7 @@ fn modal_window(assets_server: &AssetServer, score: Res<Score>) -> impl Bundle {
 
 fn game_over_text(assets_server: &AssetServer) -> impl Bundle {
     (
-        Text::new(GAME_OVER_TEXT),
+        Text::new("GAME OVER"),
         TextFont {
             font: assets_server
                 .load(GameFonts::PressStart2P.font_path())
@@ -112,6 +87,9 @@ fn game_over_text(assets_server: &AssetServer) -> impl Bundle {
     )
 }
 
+// Font size for the "Score" title.
+const SCORE_TITLE_FONT_SIZE: f32 = 30.;
+
 // Spawns the score title.
 fn score_title(assets_server: &AssetServer) -> impl Bundle {
     (
@@ -119,7 +97,7 @@ fn score_title(assets_server: &AssetServer) -> impl Bundle {
             margin: UiRect::top(px(30)),
             ..Default::default()
         },
-        Text::new(SCORE_TITLE),
+        Text::new("Final Score"),
         TextFont {
             font_size: px(SCORE_TITLE_FONT_SIZE).into(),
             font: assets_server
@@ -130,6 +108,9 @@ fn score_title(assets_server: &AssetServer) -> impl Bundle {
         TextColor(TEXT_COLOR),
     )
 }
+
+// Font size for the player's final score.
+const FINAL_SCORE_FONT_SIZE: f32 = 50.;
 
 // Displays the final score.
 fn final_score(score: Res<Score>, assets_server: &AssetServer) -> impl Bundle {
@@ -150,6 +131,13 @@ fn final_score(score: Res<Score>, assets_server: &AssetServer) -> impl Bundle {
     )
 }
 
+// Font size for the retry button text.
+const RETRY_BUTTON_TEXT_FONT_SIZE: f32 = 25.;
+// Width and height of the retry button in pixels.
+const RETRY_BUTTON_DIMENSIONS: Vec2 = Vec2::new(200., 70.);
+// Border thickness of the retry button.
+const RETRY_BUTTON_BORDER_THICKNESS: f32 = 2.5;
+
 // Spawns the retry button.
 fn retry_button(assets_server: &AssetServer) -> impl Bundle {
     (
@@ -168,7 +156,7 @@ fn retry_button(assets_server: &AssetServer) -> impl Bundle {
         RetryButton,
         children![(
             RetryButtonText,
-            Text::new(RETRY_BUTTON_TEXT),
+            Text::new("Retry"),
             TextFont {
                 font_size: px(RETRY_BUTTON_TEXT_FONT_SIZE).into(),
                 font: assets_server

@@ -2,15 +2,19 @@ use crate::game::asteroids::{asteroid_sides::Side, asteroid_types::AsteroidType}
 use bevy::prelude::*;
 use rand::RngExt;
 
+// Defines the radius of the asteroid collider.
 const SMALL_ASTEROID_RADIUS: f32 = 25.;
 const MEDIUM_ASTEROID_RADIUS: f32 = 50.;
 const LARGE_ASTEROID_RADIUS: f32 = 100.;
 
+// Default asteroid velocity
 const DEFAULT_VELOCITY_ASTEROID: Vec3 = Vec3::ZERO;
 
+// Defines the min/max rotation factor for the asteroids
 const MIN_ROTATION_FACTOR_ASTEROID: f32 = 0.01;
 const MAX_ROTATION_FACTOR_ASTEROID: f32 = 0.03;
 
+// Defines the image paths for the asteroids.
 const ASTEROID_PATH_1: &str = "asteroids_images/asteroid_1.png";
 const ASTEROID_PATH_2: &str = "asteroids_images/asteroid_2.png";
 const ASTEROID_PATH_3: &str = "asteroids_images/asteroid_3.png";
@@ -60,9 +64,9 @@ impl Asteroid {
     // Returns the collider_radius based on the AsteroidType.
     fn get_collider_radius(asteroid_type: &AsteroidType) -> f32 {
         match asteroid_type {
-            AsteroidType::AsteroidSmall => SMALL_ASTEROID_RADIUS,
-            AsteroidType::AsteroidMedium => MEDIUM_ASTEROID_RADIUS,
-            AsteroidType::AsteroidLarge => LARGE_ASTEROID_RADIUS,
+            AsteroidType::Small => SMALL_ASTEROID_RADIUS,
+            AsteroidType::Medium => MEDIUM_ASTEROID_RADIUS,
+            AsteroidType::Large => LARGE_ASTEROID_RADIUS,
         }
     }
     // Returns a random rotation factor

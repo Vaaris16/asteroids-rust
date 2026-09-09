@@ -9,8 +9,6 @@ use crate::{
     },
 };
 
-const MAX_ASTEROIDS: usize = 10;
-
 pub struct AsteroidPlugin;
 
 impl Plugin for AsteroidPlugin {
@@ -58,6 +56,9 @@ fn move_asteroid(asteroids: Query<(&mut Transform, &Asteroid), With<Asteroid>>) 
         asteroid_trans.translation += asteroid.velocity;
     }
 }
+
+// Defines the max asteroid.
+const MAX_ASTEROIDS: usize = 10;
 
 // Maintains the number of asteroids.
 fn maintain_asteroids(

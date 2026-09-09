@@ -28,25 +28,7 @@ impl Plugin for SpaceShipLifesPlugin {
     }
 }
 
-pub fn decrement_lifes(
-    life_indicator: Query<(Entity, &SpaceShipLifesIndicator), With<SpaceShipLifesIndicator>>,
-    lifes: &mut SpaceShipLifes,
-    game_state: &mut NextState<GameState>,
-    commands: &mut Commands,
-) {
-    lifes.remaining_lifes -= 1;
-
-    if lifes.remaining_lifes == 0 {
-        game_state.set(GameState::Retry);
-    }
-
-    for (indicator_entity, indicator) in life_indicator {
-        if indicator.index > lifes.remaining_lifes {
-            commands.entity(indicator_entity).despawn();
-        }
-    }
-}
-
+// Spawns the space ship live ui.
 fn spaceship_lifes(mut commands: Commands, assets_server: Res<AssetServer>) {
     commands
         .spawn((
@@ -75,10 +57,32 @@ fn spaceship_lifes(mut commands: Commands, assets_server: Res<AssetServer>) {
         });
 }
 
+// Resets space ship lifes.
 fn reset_spaceship_lifes(mut lifes: ResMut<SpaceShipLifes>) {
     lifes.remaining_lifes = 3;
 }
 
+// Cleans up the spaceship life ui.
 fn cleanup_spaceship_lifes_ui(mut commands: Commands, ui: Single<Entity, With<SpaceShipLifeUi>>) {
     commands.entity(*ui).despawn();
+}
+
+// Decrements lifes.
+pub fn decrement_lifes(
+    life_indicator: Query<(Entity, &SpaceShipLifesIndicator), With<SpaceShipLifesIndicator>>,
+    lifes: &mut SpaceShipLifes,
+    game_state: &mut NextState<GameState>,
+    commands: &mut Commands,
+) {
+    lifes.remaining_lifes -= 1;
+
+    if lifes.remaining_lifes == 0 {
+        game_state.set(GameState::Retry);
+    }
+
+    for (indicator_entity, indicator) in life_indicator {
+        if indicator.index > lifes.remaining_lifes {
+            commands.entity(indicator_entity).despawn();
+        }
+    }
 }

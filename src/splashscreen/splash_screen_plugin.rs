@@ -16,24 +16,6 @@ impl Plugin for SplashScreenPlugin {
     }
 }
 
-// Font size of the splash screen title.
-const FONT_SIZE_SPLASH_TITLE: i32 = 120;
-
-// Font size of the start button text.
-const START_BUTTON_FONT_SIZE: i32 = 20;
-
-// Text displayed as the splash screen title.
-const SPLASH_TITLE: &str = "ASTEROID";
-
-// Text displayed inside the start button.
-const START_BUTTON_TEXT: &str = "START";
-
-// Width and height of the start button in pixels.
-const SPLASH_START_BUTTON_SIZE: Vec2 = Vec2::new(250., 60.);
-
-// Border thickness of the start button.
-const START_BUTTON_BORDER_THICKNESS: f32 = 2.5;
-
 #[derive(Component)]
 struct SplashScreenComponent;
 
@@ -60,10 +42,13 @@ fn splash_screen(mut commands: Commands, assets_server: Res<AssetServer>) {
     ));
 }
 
+// Font size of the splash screen title.
+const FONT_SIZE_SPLASH_TITLE: i32 = 120;
+
 // Spawns the splash screen title.
 fn splash_title(assets_server: &AssetServer) -> impl Bundle {
     (
-        Text::new(SPLASH_TITLE),
+        Text::new("ASTEROID"),
         TextFont {
             font_size: px(FONT_SIZE_SPLASH_TITLE).into(),
             font: assets_server
@@ -74,6 +59,13 @@ fn splash_title(assets_server: &AssetServer) -> impl Bundle {
         TextColor(TEXT_COLOR),
     )
 }
+
+// Font size of the start button text.
+const START_BUTTON_FONT_SIZE: i32 = 20;
+// Width and height of the start button in pixels.
+const SPLASH_START_BUTTON_SIZE: Vec2 = Vec2::new(250., 60.);
+// Border thickness of the start button.
+const START_BUTTON_BORDER_THICKNESS: f32 = 2.5;
 
 // Spawns the start button
 fn start_button(assets_server: &AssetServer) -> impl Bundle {
@@ -92,7 +84,7 @@ fn start_button(assets_server: &AssetServer) -> impl Bundle {
         StartButton,
         children![(
             StartButtonText,
-            Text::new(START_BUTTON_TEXT),
+            Text::new("START"),
             TextColor(TEXT_COLOR),
             TextFont {
                 font: assets_server

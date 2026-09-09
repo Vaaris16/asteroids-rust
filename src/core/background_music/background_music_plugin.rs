@@ -7,12 +7,14 @@ struct BackgroundMusic {
     background_music_handle: Handle<AudioSource>,
 }
 
+const BACKGROUND_MUSIC_PATH: &str = "sounds/background_music.wav";
+
 impl FromWorld for BackgroundMusic {
     fn from_world(world: &mut World) -> Self {
         let assets_server = world.resource::<AssetServer>();
 
         BackgroundMusic {
-            background_music_handle: assets_server.load("sounds/background_music.wav"),
+            background_music_handle: assets_server.load(BACKGROUND_MUSIC_PATH),
         }
     }
 }

@@ -15,9 +15,6 @@ impl Plugin for ScorePlugin {
     }
 }
 
-const SCORE_STEP: i32 = 5;
-const SCORE_TEXT_SIZE: f32 = 80.;
-
 // Component used to identitfy the score text.
 #[derive(Component)]
 struct ScoreText;
@@ -28,6 +25,9 @@ pub struct Score {
     pub score: i32,
 }
 
+// Defines the score step.
+const SCORE_STEP: i32 = 5;
+
 impl Score {
     // increments the score by the SCORE_STEP
     pub fn increment_score(&mut self) {
@@ -35,6 +35,9 @@ impl Score {
     }
 }
 
+const SCORE_TEXT_SIZE: f32 = 80.;
+
+// Spawns the score text.
 fn spawn_score(mut commands: Commands, score: Res<Score>, assets_server: Res<AssetServer>) {
     commands
         .spawn(Node {
