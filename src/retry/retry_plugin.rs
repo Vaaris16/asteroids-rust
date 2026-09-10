@@ -60,7 +60,11 @@ fn modal_window(assets_server: &AssetServer, score: Res<Score>) -> impl Bundle {
             align_items: AlignItems::Center,
             flex_direction: FlexDirection::Column,
             border: UiRect::all(px(MODAL_WINDOW_BORDER_THICKNESS)),
-            padding: UiRect::all(px(50)),
+            padding: UiRect {
+                top: px(50),
+                bottom: px(50),
+                ..Default::default()
+            },
             ..Default::default()
         },
         BorderColor::all(BORDER_COLOR),

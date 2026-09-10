@@ -10,11 +10,13 @@ struct ShootSound {
     shoot_sound_handle: Handle<AudioSource>,
 }
 
+const SPACE_SHOOT_SOUND_EFFECT: &str = "sounds/shoot_sound.wav";
+
 impl FromWorld for ShootSound {
     fn from_world(world: &mut World) -> Self {
         let assets_server = world.resource::<AssetServer>();
         ShootSound {
-            shoot_sound_handle: assets_server.load("sounds/shoot_sound.wav"),
+            shoot_sound_handle: assets_server.load(SPACE_SHOOT_SOUND_EFFECT),
         }
     }
 }
@@ -39,7 +41,7 @@ pub const SPACE_SHIP_IMAGE_PATH: &str = "space_ship.png";
 // Defines the amount the space ship rotates per update.
 const SPACE_SHIP_ROTATION: f32 = 0.05;
 // Defines the width and height of the space_ship.
-const SPACE_SHIP_SIZE: [f32; 2] = [65., 75.];
+const SPACE_SHIP_SIZE: [f32; 2] = [55., 75.];
 // Defines the 3 points used for space ship collider.
 const SPACE_SHIP_POINT_A: Vec2 = Vec2::new(-SPACE_SHIP_SIZE[0] / 2., -SPACE_SHIP_SIZE[1] / 2.);
 const SPACE_SHIP_POINT_B: Vec2 = Vec2::new(SPACE_SHIP_SIZE[0] / 2., -SPACE_SHIP_SIZE[1] / 2.);

@@ -12,11 +12,13 @@ pub struct ExplosionMusic {
     explosion_handle: Handle<AudioSource>,
 }
 
+const EXPLOSION_SOUND_EFFECT: &str = "sounds/explosion.wav";
+
 impl FromWorld for ExplosionMusic {
     fn from_world(world: &mut World) -> Self {
         let assets_server = world.resource::<AssetServer>();
         ExplosionMusic {
-            explosion_handle: assets_server.load("sounds/explosion.wav"),
+            explosion_handle: assets_server.load(EXPLOSION_SOUND_EFFECT),
         }
     }
 }

@@ -3,9 +3,9 @@ use bevy::prelude::*;
 use rand::RngExt;
 
 // Defines the radius of the asteroid collider.
-const SMALL_ASTEROID_RADIUS: f32 = 25.;
-const MEDIUM_ASTEROID_RADIUS: f32 = 50.;
-const LARGE_ASTEROID_RADIUS: f32 = 100.;
+const SMALL_ASTEROID_RADIUS: f32 = 20.;
+const MEDIUM_ASTEROID_RADIUS: f32 = 40.;
+const LARGE_ASTEROID_RADIUS: f32 = 80.;
 
 // Default asteroid velocity
 const DEFAULT_VELOCITY_ASTEROID: Vec3 = Vec3::ZERO;
