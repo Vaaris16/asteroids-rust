@@ -1,27 +1,14 @@
 use avian2d::prelude::*;
 use bevy::{audio::Volume, platform::collections::HashSet, prelude::*};
 
-use crate::game::{
-    asteroids::{asteroid_component::Asteroid, asteroid_plugin::spawn_asteroid},
-    spaceship::spaceship_plugin::Bullet,
-    ui::score::score_plugin::Score,
+use crate::{
+    core::game_assets::game_assets::GameAssets,
+    game::{
+        asteroids::{asteroid_component::Asteroid, asteroid_plugin::spawn_asteroid},
+        spaceship::spaceship_plugin::Bullet,
+        ui::score::score_plugin::Score,
+    },
 };
-
-#[derive(Resource, Deref)]
-pub struct ExplosionMusic {
-    explosion_handle: Handle<AudioSource>,
-}
-
-const EXPLOSION_SOUND_EFFECT: &str = "sounds/explosion.wav";
-
-impl FromWorld for ExplosionMusic {
-    fn from_world(world: &mut World) -> Self {
-        let assets_server = world.resource::<AssetServer>();
-        ExplosionMusic {
-            explosion_handle: assets_server.load(EXPLOSION_SOUND_EFFECT),
-        }
-    }
-}
 
 // Checks if a bullet and asteroid collided, despawns both, and updates the score.
 pub fn check_collision_asteroid_with_bullet(
@@ -29,10 +16,9 @@ pub fn check_collision_asteroid_with_bullet(
     bullets: Query<(), With<Bullet>>,
     asteroids: Query<(&Transform, &Asteroid), With<Asteroid>>,
     mut commands: Commands,
-    assets_server: Res<AssetServer>,
     mut score: ResMut<Score>,
     window_s: Single<&Window>,
-    music: Res<ExplosionMusic>,
+    game_assets: Res<GameAssets>,
 ) {
     let mut processed_asteroid: HashSet<Entity> = HashSet::new();
     for event in events.read() {
@@ -49,7 +35,7 @@ pub fn check_collision_asteroid_with_bullet(
             };
 
         commands.spawn((
-            AudioPlayer::new(music.explosion_handle.clone()),
+            AudioPlayer::new(game_assets.explosion_sound.clone()),
             PlaybackSettings::DESPAWN.with_volume(Volume::Linear(0.8)),
         ));
 
@@ -67,15 +53,16 @@ pub fn check_collision_asteroid_with_bullet(
                     window_s.width(),
                     window_s.height(),
                     smaller_asteroid_type.clone(),
+                    &game_assets,
                 );
                 let vel = Asteroid::rand_vel();
 
                 spawn_asteroid(
                     &mut commands,
-                    &assets_server,
                     old_asteroid_transform.translation,
                     vel,
                     new_asteroid,
+                    &game_assets,
                 );
             }
         }

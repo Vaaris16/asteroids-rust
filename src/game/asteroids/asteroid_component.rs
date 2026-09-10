@@ -1,4 +1,7 @@
-use crate::game::asteroids::{asteroid_sides::Side, asteroid_types::AsteroidType};
+use crate::{
+    core::game_assets::game_assets::GameAssets,
+    game::asteroids::{asteroid_sides::Side, asteroid_types::AsteroidType},
+};
 use bevy::prelude::*;
 use rand::{RngExt, rngs::ThreadRng};
 
@@ -14,11 +17,6 @@ const DEFAULT_VELOCITY_ASTEROID: Vec3 = Vec3::ZERO;
 const MIN_ROTATION_FACTOR_ASTEROID: f32 = 0.01;
 const MAX_ROTATION_FACTOR_ASTEROID: f32 = 0.03;
 
-// Defines the image paths for the asteroids.
-const ASTEROID_PATH_1: &str = "asteroids_images/asteroid_1.png";
-const ASTEROID_PATH_2: &str = "asteroids_images/asteroid_2.png";
-const ASTEROID_PATH_3: &str = "asteroids_images/asteroid_3.png";
-
 // Component used to identify asteroids
 #[derive(Component)]
 pub struct Asteroid {
@@ -28,13 +26,18 @@ pub struct Asteroid {
     pub window_x: f32,
     pub window_y: f32,
     pub asteroid_type: AsteroidType,
-    pub asteroid_path: &'static str,
+    pub asteroid_path: Handle<Image>,
     pub collider_radius: f32,
 }
 
 impl Asteroid {
     // Used to spawn a new Asteroid Component
-    pub fn new(window_x: f32, window_y: f32, asteroid_type: AsteroidType) -> Self {
+    pub fn new(
+        window_x: f32,
+        window_y: f32,
+        asteroid_type: AsteroidType,
+        game_assets: &GameAssets,
+    ) -> Self {
         let collider_radius = Self::get_collider_radius(&asteroid_type);
         Self {
             velocity: DEFAULT_VELOCITY_ASTEROID,
@@ -43,18 +46,8 @@ impl Asteroid {
             window_x,
             window_y,
             asteroid_type,
-            asteroid_path: Self::asteroid_path(),
+            asteroid_path: game_assets.rand_asteroids(),
             collider_radius,
-        }
-    }
-
-    // Returns the asteroid image's path.
-    fn asteroid_path() -> &'static str {
-        match rand::rng().random_range(0..3) {
-            0 => ASTEROID_PATH_1,
-            1 => ASTEROID_PATH_2,
-            2 => ASTEROID_PATH_3,
-            _ => unreachable!(),
         }
     }
 

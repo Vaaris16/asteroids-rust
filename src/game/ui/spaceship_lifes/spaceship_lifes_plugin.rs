@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::{GameState, game::spaceship::spaceship_plugin::SPACE_SHIP_IMAGE_PATH};
+use crate::{GameState, core::game_assets::game_assets::GameAssets};
 
 pub struct SpaceShipLifesPlugin;
 
@@ -29,7 +29,7 @@ impl Plugin for SpaceShipLifesPlugin {
 }
 
 // Spawns the space ship live ui.
-fn spaceship_lifes(mut commands: Commands, assets_server: Res<AssetServer>) {
+fn spaceship_lifes(mut commands: Commands, game_assets: Res<GameAssets>) {
     commands
         .spawn((
             Node {
@@ -45,7 +45,7 @@ fn spaceship_lifes(mut commands: Commands, assets_server: Res<AssetServer>) {
         .with_children(|life| {
             for i in 1..4 {
                 life.spawn((
-                    ImageNode::new(assets_server.load(SPACE_SHIP_IMAGE_PATH)),
+                    ImageNode::new(game_assets.spaceship_image.clone()),
                     SpaceShipLifesIndicator { index: i },
                     Node {
                         width: px(40),

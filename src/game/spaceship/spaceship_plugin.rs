@@ -1,29 +1,12 @@
 use avian2d::prelude::*;
 use bevy::prelude::*;
 
-use crate::{GameState, game::game_plugin::GameSet};
+use crate::{GameState, core::game_assets::game_assets::GameAssets, game::game_plugin::GameSet};
 
 pub struct SpaceShipPlugin;
 
-#[derive(Resource, Deref)]
-struct ShootSound {
-    shoot_sound_handle: Handle<AudioSource>,
-}
-
-const SPACE_SHOOT_SOUND_EFFECT: &str = "sounds/shoot_sound.wav";
-
-impl FromWorld for ShootSound {
-    fn from_world(world: &mut World) -> Self {
-        let assets_server = world.resource::<AssetServer>();
-        ShootSound {
-            shoot_sound_handle: assets_server.load(SPACE_SHOOT_SOUND_EFFECT),
-        }
-    }
-}
-
 impl Plugin for SpaceShipPlugin {
     fn build(&self, app: &mut App) {
-        app.init_resource::<ShootSound>();
         app.add_systems(OnEnter(GameState::Game), spawn_space_ship)
             .add_systems(Update, space_ship_controls.in_set(GameSet))
             .add_systems(Update, out_of_bounds_bullets.in_set(GameSet))
@@ -36,8 +19,6 @@ pub struct SpaceShip;
 #[derive(Component)]
 pub struct Bullet;
 
-// Image path of the space ship.
-pub const SPACE_SHIP_IMAGE_PATH: &str = "space_ship.png";
 // Defines the amount the space ship rotates per update.
 const SPACE_SHIP_ROTATION: f32 = 0.05;
 // Defines the width and height of the space_ship.
@@ -48,10 +29,10 @@ const SPACE_SHIP_POINT_B: Vec2 = Vec2::new(SPACE_SHIP_SIZE[0] / 2., -SPACE_SHIP_
 const SPACE_SHIP_POINT_C: Vec2 = Vec2::new(0., SPACE_SHIP_SIZE[1] / 2.);
 
 // Spawns the space ship.
-fn spawn_space_ship(mut commands: Commands, assets_server: Res<AssetServer>) {
+fn spawn_space_ship(game_assets: Res<GameAssets>, mut commands: Commands) {
     commands.spawn((
         Sprite {
-            image: assets_server.load(SPACE_SHIP_IMAGE_PATH),
+            image: game_assets.spaceship_image.clone(),
             ..Default::default()
         },
         Collider::triangle(SPACE_SHIP_POINT_A, SPACE_SHIP_POINT_B, SPACE_SHIP_POINT_C),
@@ -62,8 +43,6 @@ fn spawn_space_ship(mut commands: Commands, assets_server: Res<AssetServer>) {
     ));
 }
 
-// Image path of the bullet.
-const BULLET_IMAGE_PATH: &str = "bullet.png";
 // Bullet offset from the space ship.
 const BULLET_OFFSET: Vec3 = Vec3::new(0., SPACE_SHIP_SIZE[1] / 2., 0.);
 // Defines the bullet speed.
@@ -76,8 +55,7 @@ fn space_ship_controls(
     mut space_ship: Single<&mut Transform, With<SpaceShip>>,
     key_pressed: Res<ButtonInput<KeyCode>>,
     mut commands: Commands,
-    assets_server: Res<AssetServer>,
-    shoot_sound: Res<ShootSound>,
+    game_assets: Res<GameAssets>,
 ) {
     for key in key_pressed.get_pressed() {
         match key {
@@ -87,9 +65,9 @@ fn space_ship_controls(
         }
 
         if key_pressed.just_pressed(KeyCode::Space) {
-            spawn_bullet(&space_ship, &mut commands, &assets_server);
+            spawn_bullet(&space_ship, &mut commands, &game_assets);
             commands.spawn((
-                AudioPlayer::new(shoot_sound.clone()),
+                AudioPlayer::new(game_assets.shoot_sound.clone()),
                 PlaybackSettings::DESPAWN,
             ));
         }
@@ -100,12 +78,12 @@ fn space_ship_controls(
 fn spawn_bullet(
     space_ship: &Single<&mut Transform, With<SpaceShip>>,
     commands: &mut Commands,
-    assets_server: &AssetServer,
+    game_assets: &GameAssets,
 ) {
     let tip = space_ship.translation + space_ship.rotation * BULLET_OFFSET;
     commands.spawn((
         Sprite {
-            image: assets_server.load(BULLET_IMAGE_PATH),
+            image: game_assets.bullet_image.clone(),
             ..Default::default()
         },
         Bullet,

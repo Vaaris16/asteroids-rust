@@ -3,6 +3,7 @@ use bevy::{prelude::*, window::PrimaryWindow};
 
 use crate::{
     GameState,
+    core::game_assets::game_assets::GameAssets,
     game::{
         asteroids::{asteroid_component::Asteroid, asteroid_types::AsteroidType},
         game_plugin::GameSet,
@@ -30,16 +31,16 @@ impl Plugin for AsteroidPlugin {
 // Spawns an asteroid.
 pub fn spawn_asteroid(
     commands: &mut Commands,
-    assets_server: &AssetServer,
     pos: Vec3,
     vel: Vec3,
     mut asteroid: Asteroid,
+    game_assets: &GameAssets,
 ) {
     asteroid.velocity = vel;
 
     commands.spawn((
         Sprite {
-            image: assets_server.load(asteroid.asteroid_path),
+            image: game_assets.rand_asteroids(),
             custom_size: Some(Vec2::splat(asteroid.collider_radius * 2.)),
             ..Default::default()
         },
@@ -65,15 +66,20 @@ fn maintain_asteroids(
     window_s: Single<&Window>,
     asteroids: Query<(), With<Asteroid>>,
     mut commands: Commands,
-    assets_server: Res<AssetServer>,
+    game_assets: Res<GameAssets>,
 ) {
     let asteroid_count = asteroids.iter().count();
 
     let asteroid_type = AsteroidType::rand_asteroid_type();
-    let asteroid = Asteroid::new(window_s.width(), window_s.height(), asteroid_type);
+    let asteroid = Asteroid::new(
+        window_s.width(),
+        window_s.height(),
+        asteroid_type,
+        &game_assets,
+    );
     let (pos, vel) = asteroid.rand_pos_vel();
     if asteroid_count <= MAX_ASTEROIDS {
-        spawn_asteroid(&mut commands, &assets_server, pos, vel, asteroid);
+        spawn_asteroid(&mut commands, pos, vel, asteroid, &game_assets);
     }
 }
 
