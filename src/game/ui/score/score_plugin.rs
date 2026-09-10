@@ -48,6 +48,10 @@ fn spawn_score(mut commands: Commands, score: Res<Score>, assets_server: Res<Ass
         })
         .with_children(|score_parent| {
             score_parent.spawn((
+                Node {
+                    margin: UiRect::top(px(15)),
+                    ..Default::default()
+                },
                 Text::new(score.score.to_string()),
                 TextFont {
                     font_size: px(SCORE_TEXT_SIZE).into(),
