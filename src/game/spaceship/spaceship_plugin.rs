@@ -65,7 +65,7 @@ fn spawn_space_ship(mut commands: Commands, assets_server: Res<AssetServer>) {
 // Image path of the bullet.
 const BULLET_IMAGE_PATH: &str = "bullet.png";
 // Bullet offset from the space ship.
-const BULLET_OFFSET: Vec3 = Vec3::new(0., 75., 0.);
+const BULLET_OFFSET: Vec3 = Vec3::new(0., SPACE_SHIP_SIZE[1] / 2., 0.);
 // Defines the bullet speed.
 const BULLET_SPEED: f32 = 1000.;
 // Defines the width and height of the bullet.

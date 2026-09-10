@@ -1,6 +1,6 @@
 use crate::game::asteroids::{asteroid_sides::Side, asteroid_types::AsteroidType};
 use bevy::prelude::*;
-use rand::RngExt;
+use rand::{RngExt, rngs::ThreadRng};
 
 // Defines the radius of the asteroid collider.
 const SMALL_ASTEROID_RADIUS: f32 = 20.;
@@ -47,6 +47,7 @@ impl Asteroid {
             collider_radius,
         }
     }
+
     // Returns the asteroid image's path.
     fn asteroid_path() -> &'static str {
         match rand::rng().random_range(0..3) {
@@ -56,11 +57,13 @@ impl Asteroid {
             _ => unreachable!(),
         }
     }
+
     // Returns random velocity.
     pub fn rand_vel() -> Vec3 {
         let mut rng = rand::rng();
         Vec3::new(rng.random_range(-3.0..3.0), rng.random_range(-5.0..5.0), 0.)
     }
+
     // Returns the collider_radius based on the AsteroidType.
     fn get_collider_radius(asteroid_type: &AsteroidType) -> f32 {
         match asteroid_type {
@@ -69,13 +72,34 @@ impl Asteroid {
             AsteroidType::Large => LARGE_ASTEROID_RADIUS,
         }
     }
+
     // Returns a random rotation factor
     fn rand_rotation_factor() -> f32 {
         rand::rng().random_range(MIN_ROTATION_FACTOR_ASTEROID..MAX_ROTATION_FACTOR_ASTEROID)
     }
-    // Returns random position and velocity for the asteroid.
-    pub fn rand_pos_vel(&self) -> (Vec3, Vec3) {
-        let mut rng = rand::rng();
+
+    // Returns a random velocity based on the Side of the asteroid.
+    fn rand_vel_based_sides(&self, rng: &mut ThreadRng) -> Vec3 {
+        match self.side {
+            Side::Top => Vec3::new(
+                rng.random_range(-3.0..3.0),
+                rng.random_range(-5.0..-2.0),
+                0.,
+            ),
+
+            Side::Bottom => Vec3::new(rng.random_range(-3.0..3.0), rng.random_range(2.0..5.0), 0.),
+            Side::Right => Vec3::new(
+                rng.random_range(-5.0..-2.0),
+                rng.random_range(-3.0..3.0),
+                0.,
+            ),
+
+            Side::Left => Vec3::new(rng.random_range(2.0..5.0), rng.random_range(-3.0..3.0), 0.),
+        }
+    }
+
+    // Returns a random position.
+    fn rand_pos(&self, rng: &mut ThreadRng) -> Vec3 {
         let (pos_y, pos_x) = (
             Vec3::new(
                 rng.random_range(-self.window_x / 2.0..self.window_x / 2.0),
@@ -90,35 +114,16 @@ impl Asteroid {
         );
 
         match self.side {
-            Side::Top => {
-                let vel = Vec3::new(
-                    rng.random_range(-3.0..3.0),
-                    rng.random_range(-5.0..-2.0),
-                    0.,
-                );
-                (pos_y, vel)
-            }
-
-            Side::Bottom => {
-                let vel = Vec3::new(rng.random_range(-3.0..3.0), rng.random_range(2.0..5.0), 0.);
-
-                (pos_y, vel)
-            }
-            Side::Right => {
-                let vel = Vec3::new(
-                    rng.random_range(-5.0..-2.0),
-                    rng.random_range(-3.0..3.0),
-                    0.,
-                );
-
-                (pos_x, vel)
-            }
-
-            Side::Left => {
-                let vel = Vec3::new(rng.random_range(2.0..5.0), rng.random_range(-3.0..3.0), 0.);
-
-                (pos_x, vel)
-            }
+            Side::Top => pos_y,
+            Side::Bottom => pos_y,
+            Side::Right => pos_x,
+            Side::Left => pos_x,
         }
+    }
+
+    // Returns random position and velocity for the asteroid.
+    pub fn rand_pos_vel(&self) -> (Vec3, Vec3) {
+        let mut rng = rand::rng();
+        (self.rand_pos(&mut rng), self.rand_vel_based_sides(&mut rng))
     }
 }

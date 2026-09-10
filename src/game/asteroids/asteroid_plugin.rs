@@ -79,7 +79,7 @@ fn maintain_asteroids(
 
 // Checks whether asteroids are out of bounds and despawns them.
 fn out_of_bounds_asteroid(
-    asteroids: Query<(&mut Transform, Entity, &Asteroid), With<Asteroid>>,
+    asteroids: Query<(&Transform, Entity, &Asteroid), With<Asteroid>>,
     window_s: Single<&Window, With<PrimaryWindow>>,
     mut commands: Commands,
 ) {
@@ -88,7 +88,7 @@ fn out_of_bounds_asteroid(
         if asteroid_trans.translation.y > (window_s.height() + asteroid_size)
             || asteroid_trans.translation.y < (-window_s.height() - asteroid_size)
             || asteroid_trans.translation.x > (window_s.width() + asteroid_size)
-            || asteroid_trans.translation.x < (-window_s.height() - asteroid_size)
+            || asteroid_trans.translation.x < (-window_s.width() - asteroid_size)
         {
             commands.entity(asteroid_entity).despawn();
         }
