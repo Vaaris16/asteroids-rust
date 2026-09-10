@@ -29,18 +29,12 @@ impl Plugin for AsteroidPlugin {
 }
 
 // Spawns an asteroid.
-pub fn spawn_asteroid(
-    commands: &mut Commands,
-    pos: Vec3,
-    vel: Vec3,
-    mut asteroid: Asteroid,
-    game_assets: &GameAssets,
-) {
+pub fn spawn_asteroid(commands: &mut Commands, pos: Vec3, vel: Vec3, mut asteroid: Asteroid) {
     asteroid.velocity = vel;
 
     commands.spawn((
         Sprite {
-            image: game_assets.rand_asteroids(),
+            image: asteroid.asteroid_path.clone(),
             custom_size: Some(Vec2::splat(asteroid.collider_radius * 2.)),
             ..Default::default()
         },
@@ -79,7 +73,7 @@ fn maintain_asteroids(
     );
     let (pos, vel) = asteroid.rand_pos_vel();
     if asteroid_count <= MAX_ASTEROIDS {
-        spawn_asteroid(&mut commands, pos, vel, asteroid, &game_assets);
+        spawn_asteroid(&mut commands, pos, vel, asteroid);
     }
 }
 

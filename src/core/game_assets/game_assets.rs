@@ -5,6 +5,7 @@ use rand::RngExt;
 pub struct GameAssets {
     pub spaceship_image: Handle<Image>,
     pub bullet_image: Handle<Image>,
+
     pub asteroid_1: Handle<Image>,
     pub asteroid_2: Handle<Image>,
     pub asteroid_3: Handle<Image>,

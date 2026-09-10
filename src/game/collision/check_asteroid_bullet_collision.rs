@@ -62,7 +62,6 @@ pub fn check_collision_asteroid_with_bullet(
                     old_asteroid_transform.translation,
                     vel,
                     new_asteroid,
-                    &game_assets,
                 );
             }
         }
