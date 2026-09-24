@@ -1,10 +1,7 @@
 use avian2d::prelude::*;
 use bevy::prelude::*;
 
-use crate::{
-    GameState, core::game_assets::game_assets::GameAssets, game::game_plugin::GameSet,
-    splashscreen::splash_screen_plugin::AudioState,
-};
+use crate::{GameState, core::game_assets::game_assets::GameAssets, game::game_plugin::GameSet};
 
 pub struct SpaceShipPlugin;
 
@@ -59,7 +56,6 @@ fn space_ship_controls(
     key_pressed: Res<ButtonInput<KeyCode>>,
     mut commands: Commands,
     game_assets: Res<GameAssets>,
-    audio_state: Res<State<AudioState>>,
 ) {
     for key in key_pressed.get_pressed() {
         match key {
@@ -70,12 +66,10 @@ fn space_ship_controls(
 
         if key_pressed.just_pressed(KeyCode::Space) {
             spawn_bullet(&space_ship, &mut commands, &game_assets);
-            if *audio_state.get() == AudioState::Play {
-                commands.spawn((
-                    AudioPlayer::new(game_assets.shoot_sound.clone()),
-                    PlaybackSettings::DESPAWN,
-                ));
-            }
+            commands.spawn((
+                AudioPlayer::new(game_assets.shoot_sound.clone()),
+                PlaybackSettings::DESPAWN,
+            ));
         }
     }
 }

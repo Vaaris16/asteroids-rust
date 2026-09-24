@@ -8,7 +8,6 @@ use crate::{
         spaceship::spaceship_plugin::Bullet,
         ui::score::score_plugin::Score,
     },
-    splashscreen::splash_screen_plugin::AudioState,
 };
 
 // Checks if a bullet and asteroid collided, despawns both, and updates the score.
@@ -20,7 +19,6 @@ pub fn check_collision_asteroid_with_bullet(
     mut score: ResMut<Score>,
     window_s: Single<&Window>,
     game_assets: Res<GameAssets>,
-    audio_state: Res<State<AudioState>>,
 ) {
     let mut processed_asteroid: HashSet<Entity> = HashSet::new();
     for event in events.read() {
@@ -36,12 +34,10 @@ pub fn check_collision_asteroid_with_bullet(
                 continue;
             };
 
-        if *audio_state.get() == AudioState::Play {
-            commands.spawn((
-                AudioPlayer::new(game_assets.explosion_sound.clone()),
-                PlaybackSettings::DESPAWN.with_volume(Volume::Linear(0.8)),
-            ));
-        }
+        commands.spawn((
+            AudioPlayer::new(game_assets.explosion_sound.clone()),
+            PlaybackSettings::DESPAWN.with_volume(Volume::Linear(0.8)),
+        ));
 
         if !processed_asteroid.insert(asteroid_entity) {
             continue;

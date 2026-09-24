@@ -11,7 +11,6 @@ use crate::{
             SpaceShipLifes, SpaceShipLifesIndicator, decrement_lifes,
         },
     },
-    splashscreen::splash_screen_plugin::AudioState,
 };
 
 pub fn check_asteroid_spaceship_collision(
@@ -23,7 +22,6 @@ pub fn check_asteroid_spaceship_collision(
     life_indicator: Query<(Entity, &SpaceShipLifesIndicator), With<SpaceShipLifesIndicator>>,
     mut commands: Commands,
     game_assets: Res<GameAssets>,
-    audio_state: Res<State<AudioState>>,
 ) {
     for event in events.read() {
         let entity1 = event.collider1;
@@ -33,12 +31,10 @@ pub fn check_asteroid_spaceship_collision(
             || (asteroids.contains(entity2) && space_ship.contains(entity1))
         {
             decrement_lifes(life_indicator, &mut lifes, &mut next_state, &mut commands);
-            if *audio_state.get() == AudioState::Play {
-                commands.spawn((
-                    AudioPlayer::new(game_assets.life_decrement_sound.clone()),
-                    PlaybackSettings::DESPAWN,
-                ));
-            }
+            commands.spawn((
+                AudioPlayer::new(game_assets.life_decrement_sound.clone()),
+                PlaybackSettings::DESPAWN,
+            ));
         }
     }
 }
