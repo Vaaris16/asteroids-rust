@@ -1,5 +1,5 @@
 use avian2d::PhysicsPlugins;
-use bevy::prelude::*;
+use bevy::{asset::AssetMetaCheck, prelude::*};
 
 use crate::{
     core::core_plugin::CorePlugin, game::game_plugin::GamePlugin, retry::retry_plugin::RetryPlugin,
@@ -27,12 +27,17 @@ pub enum GameState {
 fn main() {
     App::new()
         .add_plugins((
-            DefaultPlugins.set(WindowPlugin {
-                primary_window: Some(Window {
+            DefaultPlugins
+                .set(WindowPlugin {
+                    primary_window: Some(Window {
+                        ..Default::default()
+                    }),
+                    ..Default::default()
+                })
+                .set(AssetPlugin {
+                    meta_check: AssetMetaCheck::Never,
                     ..Default::default()
                 }),
-                ..Default::default()
-            }),
             PhysicsPlugins::default(),
             CorePlugin,
             GamePlugin,

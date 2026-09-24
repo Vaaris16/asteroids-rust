@@ -1,12 +1,14 @@
 use bevy::prelude::*;
 
-use crate::core::game_assets::game_assets::GameAssets;
+use crate::{
+    core::game_assets::game_assets::GameAssets, splashscreen::splash_screen_plugin::AudioState,
+};
 
 pub struct BackgroundMusicPlugin;
 
 impl Plugin for BackgroundMusicPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(Startup, play_background_music);
+        app.add_systems(OnEnter(AudioState::Play), play_background_music);
     }
 }
 

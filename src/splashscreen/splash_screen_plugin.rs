@@ -12,8 +12,16 @@ impl Plugin for SplashScreenPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(OnEnter(GameState::SplashScreen), splash_screen)
             .add_systems(Update, button_interactions)
-            .add_systems(OnExit(GameState::SplashScreen), clean_up_splash_screen);
+            .add_systems(OnExit(GameState::SplashScreen), clean_up_splash_screen)
+            .init_state::<AudioState>();
     }
+}
+
+#[derive(Default, States, Clone, Hash, Debug, PartialEq, Eq)]
+pub enum AudioState {
+    Play,
+    #[default]
+    Pause,
 }
 
 #[derive(Component)]
@@ -104,12 +112,14 @@ fn button_interactions(
         (&Interaction, &mut BackgroundColor),
         (Changed<Interaction>, With<StartButton>),
     >,
+    mut audio_state: ResMut<NextState<AudioState>>,
     mut start_button_text_color: Single<&mut TextColor, With<StartButtonText>>,
 ) {
     for (interactions, mut background_color) in start_button {
         match *interactions {
             Interaction::Pressed => {
                 game_state.set(GameState::Game);
+                audio_state.set(AudioState::Play);
             }
             Interaction::Hovered => {
                 background_color.0 = Color::WHITE;
