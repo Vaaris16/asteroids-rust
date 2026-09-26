@@ -8,6 +8,6 @@
 <img src="./assets/game_preview_images/game_play_image.png" alt="Game Play" style="width: 90%; height: 90%;" />
 <img src="./assets/game_preview_images/game_over_image.png" alt="Game Over" style="width: 90%; height: 90%;" />
 
-[**Player Asteroids!**](https://asteroids-rust.vercel.app/)
+[**Player Asteroids!**](https://asteroids-game.vercel.app/)
 
 **Enjoy!**
